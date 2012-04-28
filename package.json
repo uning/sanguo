@@ -1,0 +1,47 @@
+{
+	"name": "sangou",
+	"version": "0.0.1",
+	"description": "A javascript webgame sanguo backend",
+	"keywords": [
+		"sanguo",
+		"javascript"
+	],
+	"maintainers": [{
+		"name": "tingkun",
+		"email": "uning.ztk@gmail.com",
+		"web": "http://blog.tingkun.com"
+	}],
+	"contributors": [
+		{
+		"name" : "aa"
+		,"email" :'xxx@playcrab.com' 
+	}
+	],
+	"bugs": {
+		"mail": "uning.ztk@gmail.com",
+		"web": "http://github.com/uning/sanguo/issues"
+	},
+	"repositories": [
+	{
+		"type": "git",
+		"url": "http://github.com/uning/sanguo.git"
+	}
+	],
+	"dependencies": {
+		"htmlparser" : ">=1.7.0",
+		"request"    : ">=1.0.0",
+		"cssom"      : ">=0.2.0",
+		"contextify" : ">=0.0.3"
+	},
+	"devDependencies" : {
+		"nodeunit" : ">=0.5.x",
+		"console.log" : "*",
+		"optimist"   : "*"
+	},
+	"engines" : { "node" : ">=0.1.9" },
+	"directories": {
+		"lib": "./src"
+	},
+	"main": "./index.js"
+}
+
