@@ -36,8 +36,6 @@ app.run();
 }
 
 var pidfile = process.cwd() + '/pids/'+path.basename(s.bootconfig.mefile,'.js')+'.pid'
-
-
 fs.writeFile( pidfile, process.pid, function (err) {
   if (err) throw err;
   log.info('pid  saved in file:"' , pidfile , '" ' + process.pid );
@@ -49,7 +47,7 @@ process.on('uncaughtException', function (err) {
 });
 
 process.on('exit',function(){
-	log.error('process ',process.pid + ' exit, running time: ', process.uptime(),' seconds')
+	log.warn('process ',process.pid + ' exit, running time: ', process.uptime(),' seconds')
 	fs.unlinkSync(pidfile)
 })
 process.on('SIGHUP', function () {

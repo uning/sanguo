@@ -5,7 +5,6 @@
   mefile
   confserver monodb
 
- 配置redis 
  l -- local
  n -- network
   lsave file -- 储存到本地文件

@@ -1,7 +1,6 @@
 var Logger, colors, getReadableDate, level2int, levels, max, padlevels, util;
 
 
-
 util = require("util");
 
 

@@ -1,3 +1,4 @@
+(function(){
 
 var PHP = {};
 PHP.serialize = function(mixed_value) {
@@ -468,5 +469,14 @@ PHP.session_decode = function(data,handler){
 	
 }
 
-exports.module = PHP
-module.exports = PHP
+var target,property
+if(typeof(window) == 'undefined'){
+	target = module;
+	property = 'exports';
+}
+else{
+	target = window;
+	property = 'PHP';
+}
+target[property] = PHP;
+})()

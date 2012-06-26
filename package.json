@@ -1,7 +1,7 @@
 {
 	"name": "sangou",
-	"version": "0.0.1",
-	"description": "A javascript webgame sanguo backend",
+	"version": "0.0.0",
+	"description": "A webgame sanguo backend",
 	"keywords": [
 		"sanguo",
 		"javascript"
@@ -28,17 +28,13 @@
 	}
 	],
 	"dependencies": {
-		"htmlparser" : ">=1.7.0",
-		"request"    : ">=1.0.0",
-		"cssom"      : ">=0.2.0",
-		"contextify" : ">=0.0.3"
+		"socket.io" : "~0.6.0",
+		"express"    : ">=0.9.0",
 	},
 	"devDependencies" : {
-		"nodeunit" : ">=0.5.x",
-		"console.log" : "*",
-		"optimist"   : "*"
+		"mocha" : ">=0.0.1",
 	},
-	"engines" : { "node" : ">=0.1.9" },
+	"engines" : { "node" : ">=0.6.0" },
 	"directories": {
 		"lib": "./src"
 	},

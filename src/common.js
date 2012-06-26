@@ -17,7 +17,7 @@ var getLogger = exports.getLogger = function(name,opts){
 }
 
 var getRedis = exports.getRedis = function(uri){
-	return redispool.alloc(urii)
+	return redispool.alloc(uri)
 }
 
 exports.getMongoose = function(uri){
@@ -25,7 +25,6 @@ exports.getMongoose = function(uri){
 }
 
 exports.getCache  = function(){
-	log.info(s.bootconfig.cacheserver)
 	return getRedis(s.bootconfig.cacheserver);
 }
 exports.getModelName = function(file){

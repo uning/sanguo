@@ -10,15 +10,17 @@
  * 2012-04-19 - created
  *
  */
-require '/home/hotel/mywork/plframework/autoload.php';
+require '/home/hotel/wuxia/sg_backend/plframework/bootstrap.php';
 $uid = 5;
 if($argv[2]){
 	$uid = $argv[1];
-	echo PL_Tool_IdGen::genCid($uid);
+	echo PL_Session::genCid($uid);
 }else{
-	$ret =  PL_Tool_IdGen::parseCid($argv[1]);
+	$_REQUEST['cid'] = $argv[1];
+	$ss = PL_Session::getInstance();
+	$ret =  $ss->getId();
 	if($ret)
-		echo $ret['u'];
+		echo $ret;
 	else
 		echo 'error';
 	

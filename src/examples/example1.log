@@ -1,0 +1,47 @@
+{"level":"info","message":"it a info"}
+{"level":"warn","message":"it is warn"}
+{"level":"info","message":"it a info"}
+{"level":"warn","message":"it is warn"}
+{"level":"error","message":"it is error"}
+{"level":"debug","message":"it is debug"}
+{"level":"info","message":"it a info"}
+{"level":"warn","message":"it is warn"}
+{"level":"error","message":"it is error"}
+{"level":"debug","message":"it is debug"}
+{"level":"info","message":{"debug":0,"info":1,"notice":2,"warning":3,"error":4,"crit":5,"alert":6,"emerg":7}}
+{"level":"info","message":"it a info"}
+{"level":"warn","message":"it is warn"}
+{"level":"error","message":"it is error"}
+{"level":"debug","message":"it is debug"}
+{"level":"info","message":"it a info"}
+{"level":"warn","message":"it is warn"}
+{"level":"error","message":"it is error"}
+{"level":"debug","message":"it is debug"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 09:43:05"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 09:43:05"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 09:43:05"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 09:43:05"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 09:43:18"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 09:43:18"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 09:43:18"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 09:43:18"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 09:46:45"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 09:46:45"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 09:46:45"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 09:46:45"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 09:59:52"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 09:59:52"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 09:59:52"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 09:59:52"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 10:01:11"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 10:01:11"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 10:01:11"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 10:01:11"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 14:18:41"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 14:18:41"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 14:18:41"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 14:18:41"}
+{"level":"info","message":"it a info","timestamp":"21 Apr 14:25:08"}
+{"level":"warn","message":"it is warn","timestamp":"21 Apr 14:25:08"}
+{"level":"error","message":"it is error","timestamp":"21 Apr 14:25:08"}
+{"level":"debug","message":"it is debug","timestamp":"21 Apr 14:25:08"}

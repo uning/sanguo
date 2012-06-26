@@ -37,5 +37,80 @@ var ID = module.exports = {
 	},
 	genCid: function(uid) {
 		return ID.encInt(uid) + "_" + ID.encInt(Math.floor(new Date().getTime()));
+	},
+	encodeStr:function(str){
+		var ret = []
+		for( var i = 0 ; i < str.length ; ++i){
+			ret.push();
+		}
 	}
+
+
+	/** 
+	 * 数据加密
+	public static function encodeStr($str) 
+	{ 
+		$str = (string)$str; 
+		$temp = ''; 
+		for($i=0;$i<strlen($str);$i++) 
+		{ 
+			switch($i%6) 
+			{ 
+			case 0: 
+				$temp.=chr(ord($str{$i})-1); 
+				break; 
+			case 1: 
+				$temp.=chr(ord($str{$i})-5); 
+				break; 
+			case 2: 
+				$temp.=chr(ord($str{$i})-7); 
+				break; 
+			case 3: 
+				$temp.=chr(ord($str{$i})-2); 
+				break; 
+			case 4: 
+				$temp.=chr(ord($str{$i})-4); 
+				break; 
+			case 5: 
+				$temp.=chr(ord($str{$i})-9); 
+				break; 
+			} 
+		} 
+		$temp = self::base64url_encode($temp); 
+		return $temp; 
+	} 
+	/* 
+	 * 替换解密算法
+	public static function decodeStr($str) 
+	{ 
+		$str = self::base64url_decode($str); 
+		$temp = ''; 
+		for($i=0;$i<strlen($str);$i++) 
+		{ 
+			switch($i%6) 
+			{ 
+			case 0: 
+				$temp.=chr(ord($str{$i})+1); 
+				break; 
+			case 1: 
+				$temp.=chr(ord($str{$i})+5); 
+				break; 
+			case 2: 
+				$temp.=chr(ord($str{$i})+7); 
+				break; 
+			case 3: 
+				$temp.=chr(ord($str{$i})+2); 
+				break; 
+			case 4: 
+				$temp.=chr(ord($str{$i})+4); 
+				break; 
+			case 5: 
+				$temp.=chr(ord($str{$i})+9); 
+				break; 
+			} 
+		} 
+		return $temp; 
+	} 
+	 */ 
+
 };
