@@ -1,0 +1,18 @@
+form(method='post', action='/')
+  .login-box
+    fieldset
+      legend Login
+      ol
+        li
+          label(for='user[email]') E-Mail:
+          input(name='user[email]', size=40, value=user.email || '')
+        li
+          label(for='user[password]') Password:
+          input(name='user[password]', type='password', size=40, value=user.password || '')
+          label(for='remember_me') Remember me: 
+          input(name='remember_me', type='checkbox',checked)
+        li.submit
+          div.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only
+            span#submit-button.ui-button-text Login
+          a.register(href='/register')
+            | Sign up

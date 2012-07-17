@@ -1,9 +1,11 @@
 
+
+var PHP  = require('./php')
+const  ENCODE_BASE = 2101239848
 var ID = module.exports = {
-	ENCODE_BASE: 2101239848,
 	encInt: function(n) {
 		var first, first3, last, mask, offset, t1, t2, t3;
-		t1 = ID.ENCODE_BASE - n;
+		t1 = ENCODE_BASE - n;
 		last = t1 & 0xFF;
 		offset = last % 22 + 1;
 		first3 = t1 >> 8 & 0xFFFFFF;
@@ -24,93 +26,98 @@ var ID = module.exports = {
 		first3 = t1 >> 8 & 0xFFFFFF;
 		mask = (1 << (7 + offset)) - 1;
 		t2 = (first3 << offset & 0xFFFFFFFF | (first3 >> (24 - offset)) & mask) << 8 & 0xFFFFFFFF | last;
-		t3 = ID.ENCODE_BASE - t2;
+		t3 = ENCODE_BASE - t2;
 		return t3>>>0;
 	},
+
+	/**
+	 * php 生成
+	 */
 	parseCid: function(cid) {
-		var aa, ruid, uid;
-		aa = cid.split("_");
-		ruid = aa[0];
-		uid = ID.decInt(ruid);
-		if (uid < 1 || uid > 100000000) return null;
-		return uid;
-	},
-	genCid: function(uid) {
-		return ID.encInt(uid) + "_" + ID.encInt(Math.floor(new Date().getTime()));
-	},
-	encodeStr:function(str){
-		var ret = []
-		for( var i = 0 ; i < str.length ; ++i){
-			ret.push();
+		var dstr = ID.decodeStr(cid)
+	    ,ret = dstr.split('_',3)
+		if( !ret[1] ||  +ret[1] < 10000){
+			return null;
 		}
+		return ret[0];
+	},
+
+	genCid: function(uid,info) {
+		var cc  = uid + "_" + Math.floor(new Date().getTime()/1000);
+		if(info)
+			cc += '_' + PHP.serialize(info);
+		return ID.encodeStr(cc);
+	},
+
+	encodeStr:function(str){
+		var i,ret = new Buffer(str.length);
+		for(  i = 0 ; i < str.length ; ++i){
+			switch(i%6){
+				case 0 :
+					ret.writeInt8(str.charCodeAt(i)-1,i);break;
+				case 1 :
+					ret.writeInt8(str.charCodeAt(i)-5,i);break;
+				case 2 :
+					ret.writeInt8(str.charCodeAt(i)-7,i);break;
+				case 3 :
+					ret.writeInt8(str.charCodeAt(i)-2,i);break;
+				case 4 :
+					ret.writeInt8(str.charCodeAt(i)-4,i);break;
+				case 5 :
+					ret.writeInt8(str.charCodeAt(i)-9,i);break;
+
+			}
+		}
+		//return ret.toString('base64').replace(/\+\//g,'-_').replace(/=+$/g,'')
+		var bret =  ret.toString('base64')//.replace(/\+\//g,'-_').replace(/=+$/g,'')
+		//console.log(bret);
+		var trim = true,len = bret.length
+		for( i = len - 1;i > -1; --i  ){
+			if(bret[i] == '=' && trim){
+				len -= 1;
+			}else{
+				trim = false;
+			}
+			if(bret[i] == '+')
+				bret[i] = '-';
+			if(bret[i] == '/')
+				bret[i] = '_';
+		}
+		return bret.substr(0,len);
+	},
+	decodeStr:function(str){
+
+		var i,len = str.length
+
+		for( i = str.length;i > -1; --i  ){
+			if(str[i] == '-')
+				str[i] = '+';
+			if(str[i] == '_')
+				str[i] = '/';
+		}
+		var ret = new Buffer(str,'base64');
+		len  = ret.length
+		for(  i = 0 ; i < len ; ++i){
+			switch(i%6){
+				case 0 :
+					ret.writeInt8(ret[i]+1,i);break;
+				case 1 :
+					ret.writeInt8(ret[i]+5,i);break;
+				case 2 :
+					ret.writeInt8(ret[i]+7,i);break;
+				case 3 :
+					ret.writeInt8(ret[i]+2,i);break;
+				case 4 :
+					ret.writeInt8(ret[i]+4,i);break;
+				case 5 :
+					ret.writeInt8(ret[i]+9,i);break;
+
+			}
+		}
+		return ret.toString('ascii');
 	}
+	
 
 
-	/** 
-	 * 数据加密
-	public static function encodeStr($str) 
-	{ 
-		$str = (string)$str; 
-		$temp = ''; 
-		for($i=0;$i<strlen($str);$i++) 
-		{ 
-			switch($i%6) 
-			{ 
-			case 0: 
-				$temp.=chr(ord($str{$i})-1); 
-				break; 
-			case 1: 
-				$temp.=chr(ord($str{$i})-5); 
-				break; 
-			case 2: 
-				$temp.=chr(ord($str{$i})-7); 
-				break; 
-			case 3: 
-				$temp.=chr(ord($str{$i})-2); 
-				break; 
-			case 4: 
-				$temp.=chr(ord($str{$i})-4); 
-				break; 
-			case 5: 
-				$temp.=chr(ord($str{$i})-9); 
-				break; 
-			} 
-		} 
-		$temp = self::base64url_encode($temp); 
-		return $temp; 
-	} 
-	/* 
-	 * 替换解密算法
-	public static function decodeStr($str) 
-	{ 
-		$str = self::base64url_decode($str); 
-		$temp = ''; 
-		for($i=0;$i<strlen($str);$i++) 
-		{ 
-			switch($i%6) 
-			{ 
-			case 0: 
-				$temp.=chr(ord($str{$i})+1); 
-				break; 
-			case 1: 
-				$temp.=chr(ord($str{$i})+5); 
-				break; 
-			case 2: 
-				$temp.=chr(ord($str{$i})+7); 
-				break; 
-			case 3: 
-				$temp.=chr(ord($str{$i})+2); 
-				break; 
-			case 4: 
-				$temp.=chr(ord($str{$i})+4); 
-				break; 
-			case 5: 
-				$temp.=chr(ord($str{$i})+9); 
-				break; 
-			} 
-		} 
-		return $temp; 
-	} 
-	 */ 
 
 };

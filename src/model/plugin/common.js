@@ -62,8 +62,12 @@ module.exports = exports = function CommonPlugin (schema, options) {
 		var mycb = function (err,o){
 			if(o){
 				//让返回值具有schema定义的方法
-				var ret = self.obj2model(o)
-				cb(err,ret)
+				if(opts.rawret)
+				  cb(err,o)
+			  else{
+				  var ret = self.obj2model(o)
+				  cb(err,ret)
+			  }
 			}else{
 				cb(err,o)
 			}
@@ -166,6 +170,14 @@ module.exports = exports = function CommonPlugin (schema, options) {
 		this._c_cond = null;
 
 	}
+
+	//只读id
+	schema.virtual('id')
+	.get(function() {
+		if(typeof this._id  == 'object')
+			return this._id.toHexString();
+		return this._id //.toString();
+	});
 
 
 

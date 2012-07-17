@@ -3,27 +3,9 @@
 sio = require('socket.io').listen(app);
 //confiure socket io
 //https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
-sio.configure('development', function(){
-	sio.set('transports', [
-		   'websocket'
-		   , 'flashsocket'
-		   , 'htmlfile'
-		   , 'xhr-polling'
-		   , 'jsonp-polling'
-	]);
-	sio.set('log level', 3);
-	/*
-	heartbeat timeout defaults to 15 seconds
-	The timeout for the client when it should send a new heart beat to the server. This value is sent to the client after a successful handshake.
-			heartbeat interval defaults to 20 seconds
-	*/
-	sio.set('heartbeat timeout',60);sio.set('heartbeat interval',80);
-});
 
-
-sio.configure('production', function(){
+sio.configure(function(){
 	sio.enable('browser client etag');
-	sio.set('log level', 1);
 	sio.set('transports', [
 		   'websocket'
 		   , 'flashsocket'
@@ -31,44 +13,32 @@ sio.configure('production', function(){
 		   , 'xhr-polling'
 		   , 'jsonp-polling'
 	]);
-	sio.set('heartbeat timeout',30);sio.set('heartbeat interval',40);
+	//sio.set('heartbeat timeout',30);
+	//sio.set('heartbeat interval',40);
 });
 
-log.level = sio.set('log level')
 
 sio.configure( function(){
-	var cp = express.cookieParser();
+	var cookieParser = express.cookieParser();
 	//处理连接，ip 封禁
 	//根据cid 处理 等 
 	sio.set('authorization', function (handshakeData, callback) {
 		//console.log('handshakeData',handshakeData);
-		cp(handshakeData,null,function(){
+		cookieParser(handshakeData,null,function(){
 			var u,uname
 			log.info('handshakeData address',handshakeData.address);
-			if(handshakeData.query.cid){ //处理flash 连接情况(以cid 为参数)
-				u = ID.parseCid(handshakeData.query.cid); 
-				if(u){
+			auth.loadUser(handshakeData,null,function(){
+				if(handshakeData.currentUser){
+					u = handshakeData.currentUser.id;
 					callback(null, true);
-					uname = handshakeData.query.name || 'user' + u 
+					uname = handshakeData.currentUser.name || handshakeData.currentUser.email
 					handshakeData.user = uor.addUser(u,uname)
-					log.debug('cid handshake ok',handshakeData.user.id)
+					log.debug('cookie handshake ok ',handshakeData.user.id)
 				}else{
-					log.warn('cid handshake error : no userid',handshakeData)
+					callback(null, false);
+					log.warn('cookie handshake error : no userid',handshakeData)
 				}
-			}else{ //处理网页情况(以cookie 为参数,已经登录)
-				auth.loadUser(handshakeData,null,function(){
-					if(handshakeData.currentUser){
-						u = handshakeData.currentUser.id;
-						callback(null, true);
-						uname = handshakeData.currentUser.name || handshakeData.currentUser.email
-						handshakeData.user = uor.addUser(u,uname)
-						log.debug('cookie handshake ok ',handshakeData.user.id)
-					}else{
-						callback(null, false);
-						log.warn('cookie handshake error : no userid',handshakeData)
-					}
-				});
-			}
+			});
 		});
 
 		 /*
@@ -206,7 +176,7 @@ sio.sockets.on('connection', function(socket) {
   socket.on('disconnect', function(c) {
 	//uor.removeUser(socket.handshake.userid);
 	log.info('disconnect:',c,socket.handshake.user.id)
-	socket.broadcast.emit('offline',{userid:socket.handshake.user.id});
+//	socket.broadcast.emit('offline',{userid:socket.handshake.user.id});
 	var user = socket.handshake.user;
 	user.s  = 2;// offline
 	user.socket = null;

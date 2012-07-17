@@ -1,7 +1,6 @@
 
 //全局变量，包含该文件后全局可见
-//var 
-fs = require('fs')
+var fs = require('fs')
 ,path = require('path')
 ,mongoose = require('mongoose')
 ,util = require('util')
@@ -16,8 +15,8 @@ var getLogger = exports.getLogger = function(name,opts){
 	return Logger.get(name,opts)
 }
 
-var getRedis = exports.getRedis = function(uri){
-	return redispool.alloc(uri)
+var getRedis = exports.getRedis = function(uri,opts){
+	return redispool.alloc(uri,opts)
 }
 
 exports.getMongoose = function(uri){

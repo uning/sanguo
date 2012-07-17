@@ -1,0 +1,20 @@
+
+h3 在线用户列表
+
+a(href='?pageid=0') 第一页
+
+table(border=1)
+ thead  
+      th 名字 
+      th 用户id
+      th 操作
+      th 登录时间 
+      th 最后操作时间 
+ each uo,key in users
+    tr
+      td #{uo.n}
+      td #{uo.id}
+      td 发消息 封禁
+      td #{uo._t}
+      td #{uo.lastseen}
+

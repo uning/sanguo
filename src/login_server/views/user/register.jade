@@ -1,0 +1,23 @@
+
+form(method='post', action='/register')
+  fieldset
+    legend Register
+    ol
+      li
+        label(for='register[email]') E-Mail:
+        input.required(name='register[email]', size=40, value=register.email || '')
+      li
+        label(for='register[username]') Username:
+        input.required(name='register[name]', size=40, value=register.name || '')
+      li
+        label(for='register[password]') Password:
+        input.required(name='register[password]', type='password', size=40)
+      li
+        label(for='password_verify') Verify Password:
+        input.required(name='password_verify', type='password', size=40)
+      li.submit
+        div.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only
+          span#submit-button.ui-button-text Register
+        a.register(href='/')
+          | Back
+

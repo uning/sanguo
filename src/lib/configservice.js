@@ -5,13 +5,14 @@
   mefile
   confserver monodb
 
- l -- local
- n -- network
+  l -- local
+  n -- network
   lsave file -- 储存到本地文件
   nsave host port --- 到配置服务器
   lload file   -- 重新加载
   nload host port key
 */
+
 var fs = require('fs')
 ,us = require('underscore')
 ,util = require('util')
@@ -19,9 +20,8 @@ var fs = require('fs')
 ,mongoose=require('mongoose')
 ,log = require('./logger.js').get()
 
-
-var WORKROOT = path.resolve(__dirname + '/../../');
-log.name = path.basename(__filename)
+const WORKROOT = path.resolve(__dirname + '/../../');
+//log.name = path.basename(__filename)
 
 var prettyjson = function(o,space,spacer){
 	space = space || ''
@@ -73,6 +73,8 @@ var prettyjson = function(o,space,spacer){
 var s = module.exports = {
 
 	bootconfig:{},
+
+
 	getModel: function(){
 		if(this.model){
 			return this.model;
@@ -86,74 +88,6 @@ var s = module.exports = {
 		return this.model = this.mgserver.model('Config',config_schema,'configs')
 		
 	}
-
-	,btlload:function(file,cb){
-		cb = cb || function(){}
-		var self = this;
-		if(typeof file !== typeof ''){
-			if(typeof file !== typeof ''){
-				file = self.bootconfig.mefile;
-			}
-			if(typeof file !== typeof ''){
-				file = process.env.BOOTFILE;
-			}
-
-		} 	
-		if(!file || file === '' || typeof file != typeof ''){
-			cb('no bootconfig or process.env.BOOTFILE provide')
-			process.exit(0)
-			return 
-		}
-		this.lload(file,function(err,o){
-			if(err){
-				log.error('btlload() exit err: ',err)
-				process.exit(1)
-			}
-			o.role =  path.basename(o.mefile,'.js') //自动获取role,启动配置，用最后一级文件名
-			self.bootconfig = o;
-
-			cb(err,o)
-		})
-	}
-	,btnload:function(role,cb){
-		var self = this
-		var fn = function(err,o){
-			if( err || !o ){
-				log.error('btnload() bootconfig with err ',err,o)
-				process.exit(1)
-			}else{
-				self.bootconfig = o
-				self.lsave()
-				cb && cb(err,o)
-			}
-		}
-		this.nload(role,fn);
-
-	}
-
-  /**
-   * 加载配置文件,默认加载启动配置
-   * argv[2] > process.env.BOOTFILE
-   * @param {Object} confo 
-   * @return 
-   * @api public
-   */
-	,lload: function(file,callback){
-		var self = this;
-		callback = callback || function(){}
-		try{
-			var afile = fs.realpathSync(file)
-			delete require.cache[afile]
-			var confo = require(afile)
-			confo.mefile = afile; //保存文件信息
-			confo.role = path.relative(WORKROOT,confo.mefile) //自动获取role
-			callback(null,confo)
-		}catch (e){
-			log.error(' lload() '+ file +' failed :' +  e.message + '  at line ' +   e.lineNumber,e ); 
-			callback('lload '+ file +' failed')
-		}
-	}
-
 
   /**
    *  把配置保存到文件 
@@ -172,20 +106,47 @@ var s = module.exports = {
 				return;
 			}
 		}
-		if(!us.isObject(confo) && typeof confo.mefile != typeof ''){
+		if(!us.isObject(confo) && typeof confo.role != typeof ''){
 			callback('invalid obj')
 			log.error(" lsave() error invalid obj",confo);
 		} 
 		var str = prettyjson(confo)
-		fs.writeFile(confo.mefile,util.format('var r = module.exports = %s',str),function(err){
+		var sfile =  WORKROOT + '/roleconf/' + confo.role +'.js';
+		fs.writeFile(sfile,util.format('var r = module.exports = %s',str),function(err){
 			if(err){
-				log.error('lsave() error ',err,confo.mefile)
+				log.error('lsave() error ',err,sfile)
 			}else{
-				log.info(" lsave() ok")
+				log.debug(" lsave() ok")
 			}
 			callback(err)
 		})
 	}
+  /**
+   * 加载配置文件,默认加载启动配置
+   * @param {Object} confo 
+   * @return 
+   * @api public
+   */
+	,lload: function(file,callback){
+		var self = this,nex = true
+		callback = callback || function(){}
+		
+		try{
+			var afile = fs.realpathSync(file)
+			delete require.cache[afile]
+			var confo = require(afile)
+			confo.mefile = afile; //保存文件信息
+			confo.role = path.relative(WORKROOT,confo.mefile) //自动获取role
+		}catch (e){
+			nex = false
+			
+			callback('lload '+ file +' failed :' + e.message)
+		}
+		if(nex)
+			callback(null,confo)
+	}
+
+
 	/**
 	 * 从数据库load配置
 	 */
@@ -218,6 +179,8 @@ var s = module.exports = {
 		})
 
 	}
+
+
 	,nsave:function(confo,callback){
 		callback = callback || function(){}
 		if(!confo){
@@ -236,14 +199,81 @@ var s = module.exports = {
 			if(err){
 				log.error('nsave() ' + key + ' failed:',err)
 			}else{
-				log.info('nsave() ' + key + '  ok')
+				log.debug('nsave() ' + key + '  ok')
 			}
 			callback(err);
 		})
 	}
-	,inspect:function(){
+
+	,inspect : function(){
 		return prettyjson(this.bootconfig)
 	}
+
+	/**
+	 * 启动时调用
+	 */
+	,btload : function(file,cb){
+		cb = cb || function(){}
+		var self = this;
+		if(typeof file !== typeof ''){
+			if(typeof file !== typeof ''){
+				file = self.bootconfig.mefile;
+			}
+			if(typeof file !== typeof ''){
+				file = process.env.BOOTFILE;
+			}
+		} 	
+		if(!file || file === '' || typeof file != typeof ''){
+			cb('no bootconfig or process.env.BOOTFILE provide')
+			process.exit(0)
+			return 
+		}
+
+		var loadok = function(err,o){
+			o.role =  path.basename(o.mefile,'.js') //自动获取role,启动配置，用最后一级文件名
+			self.bootconfig = o;
+			cb(err,o)
+		}
+		self.lload(file,function(err,o){
+			if(err){
+				log.info('lload() failed err ,try load config from monodb : ',err)
+				var role =  path.basename(file,'.js');
+				self.nload(role,function(err,o){
+					if(err){
+						log.error('try load config from monodb) : ',err)
+						process.exit(1)
+					}else{
+						loadok(err,o)
+						self.lsave(o);
+					}
+				})
+				//process.exit(1)
+			}else{
+				loadok(err,o)
+				self.nsave(o);
+			}
+		})
+	}
+
+
+	//================
+	//load 之后可以用的方法
+	
+	,get : function(name,def){
+		if(s.bootconfig[name])
+			return s.bootconfig[name];
+
+		if(def)
+			return def;
+		log.error('get config ', name ,' not find')
+		//直接退出，差关键配置
+		process.exit(1);
+
+	}
+
+
+
+
 
 }  
 

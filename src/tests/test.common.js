@@ -26,7 +26,7 @@ describe('common', function() {
 
 	});
 	it('getRedis',function(done){
-		s.btlload();
+		s.btload();
 		var constr = s.bootconfig.cacheserver;
 		var r = comm.getRedis(constr); 
 		var r1 = comm.getRedis(constr); 
@@ -45,7 +45,7 @@ describe('common', function() {
 
 	})
 	it('getCache',function(done){
-		s.btlload();
+		s.btload();
 		var r = comm.getCache(); 
 		var k = 1,v = 'it val of ' + k
 		r.set(k, v, function(){

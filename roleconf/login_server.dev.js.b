@@ -10,15 +10,17 @@ var r = module.exports = {
 		,port:53000
 	}
 	,confserver:'mongodb://127.0.0.1:35050/sanguo'
+	,dbserver:'mongodb://127.0.0.1:35050/sanguo'
+	,cacheserver:'redis://localhost:53000'
 	,sections:{
-		sec1:{
+		s1:{
 			name:'富甲天下'
 			,gameservers:{
-				sec1_g1:{
+				s1_g1:{
 					host:'192.168.1.50'
 					,port:4040
 				}
-				,sec1_g2:{
+				,s1_g2:{
 					host:'192.168.1.50'
 					,port:4042
 				}

@@ -1,4 +1,4 @@
-var Logger, colors, getReadableDate, level2int, levels, max, padlevels, util;
+var Logger, colors, getReadableDate, levels, max, padlevels, util;
 
 
 util = require("util");
@@ -48,9 +48,8 @@ getReadableDate = function() {
 };
 
 Logger.prototype.log = function() {
-  var i, index, l, param;
-  index = level2int[this.type];
-  if (index > this.level || !this.enabled) return this;
+  if (this.clvl > this.level || !this.enabled) return this;
+  var i, l, param,index = this.clvl;
   param = [];
   if (this.colors) param.push("  \u001b[" + colors[index] + "m");
   if (this.wdate) param.push("[" + getReadableDate() + "]");
@@ -74,10 +73,10 @@ Logger.prototype.log = function() {
 max = 0;
 
 levels.forEach(function(name, k) {
-  level2int[name] = k;
+  //level2int[name] = k;
   max = Math.max(max, name.length);
   return Logger.prototype[name] = function() {
-    this.type = name;
+    this.clvl = k;
     return this.log.apply(this, arguments);
   };
 });

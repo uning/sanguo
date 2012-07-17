@@ -10,48 +10,35 @@ var srcdir = '../'
 ,should = require('should')
 
 process.env.BOOTFILE = __dirname + '/../../roleconf/login_server.dev.js'
-s.btlload()
+s.btload()
 
 //var describe = describe || function(){}
 var uri = 'mongodb://localhost:35050/test'
 uri = s.bootconfig.dbserver;
-//console.log(s.bootconfig);process.exit(0);
 
 var mc = comm.getMongoose(uri)
 var m  = ls.get(mc,'jsuser') 
 uri = s.bootconfig.confserver;
-function doanother_connection(){
-	uri = 'mongodb://122.11.61.27:35050/test'
-	var mc1 = comm.getMongoose(uri)
-	var m1 = ls.get(mc1,'user')
-	m1.findOne({},function(err,o){
-		console.log(util.inspect(o),err)
-	})
-}
 
-var id = 1
-var uo = m.obj2model({_id:id,pid:'testuser1'});
-
-uo.set('newffaa' , 'kklll');
+var pid = 'test1112';
 
 
-
-if(false){
-console.log(uo._delta(),uo._where(),uo);
-var delta = uo._delta();
-m.fam({query:uo._where(),update:delta},function(err,u){
-	console.log(uo,err,u);
+m.findOne({pid:pid},function(err,u){
+	console.log(err,u);
 })
-uo._reset();
-console.log('after reset',uo._delta(),uo._where());
-}
-//uo.save(function(err,u){
-//	console.log(uo,err,u);
-//})
+false && 
+m.far({query:{pid:pid}},function(err,u){
+	var cache = comm.getCache();
+	cache.del(pid,function(){
+		m.genid(pid,{name:'name ' + pid,_password:'abcdef'},function(err,nid,isNew,u){
+			console.log(err,nid,isNew,u);
+		});
 
-//if(false)
+	})
+});
 
-//if( false)
+
+if( false)
 describe('loginuser', function() {
 	it('idget',function(done){
 		m.idget(id,function(err,o){

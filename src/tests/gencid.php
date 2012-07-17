@@ -11,17 +11,9 @@
  *
  */
 require '/home/hotel/wuxia/sg_backend/plframework/bootstrap.php';
-$uid = 5;
-if($argv[2]){
-	$uid = $argv[1];
-	echo PL_Session::genCid($uid);
-}else{
-	$_REQUEST['cid'] = $argv[1];
-	$ss = PL_Session::getInstance();
-	$ret =  $ss->getId();
-	if($ret)
-		echo $ret;
-	else
-		echo 'error';
-	
-}
+$m = $argv[2];
+if(method_exists(PL_Tool_IdGen,$m))
+	echo PL_Tool_IdGen::$m($argv[1]);
+else
+	echo 'error';
+

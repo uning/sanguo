@@ -18,7 +18,7 @@ function RedisPool(opts) {
 
   this._pool        = {};
   this._exclusive   = [];
-  this._defaultHost = opts.defaultHost|| 'localhost';
+  this._defaultHost = opts.defaultHost || 'localhost';
   this._defaultPort = opts.defaultPort || 6379;
   this.log = opts.log  || {info:function(){},debug:function(){},error:function(){}}
   RedisPool.singleton = this;
@@ -51,6 +51,7 @@ RedisPool.prototype.stringify = function(parsed) {
 };
 
 RedisPool.prototype.alloc = function(dsn, options) {
+	if(!dsn) return null;
   var parsed = this.parse(dsn);
   this.log.info('Alloc: ' + dsn + ' (' + JSON.stringify(options) + ')');
 

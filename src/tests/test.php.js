@@ -18,7 +18,7 @@ describe('php', function() {
 		php.unserialize(s).should.eql(data)
 	});
 	it('session_encode/session_decode',function(done){
-		var uid = 1;
+		var uid = '1s1';
 		rc.get(uid,function(err,d){
 			var  ud = php.unserialize(d);
 			var o = php.session_decode(ud);

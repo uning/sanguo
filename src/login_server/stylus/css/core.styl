@@ -1,0 +1,100 @@
+@import 'include'
+
+body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, dd, img, form, fieldset, blockquote
+  margin 0
+  padding 0
+  border 0
+
+body
+  background colors-background
+  font 14px/22px Verdana, Sans-Serif;
+  font-color colors-fontbody
+
+body
+  text-align center
+
+#content
+  margin 0 auto
+  width 960px
+  text-align left
+
+#chat-interface
+  padding 3px
+  #chatwindow
+    height 500px
+    position relative
+    #chat-messages
+      //position absolute
+      bottom 5px
+      left 3px
+      right 3px
+      list-style none
+      li
+        .date
+          color colors-mediumbackground
+          padding-right 3px
+        .name
+          color colors-darkbackground
+        .message
+          color colors-fontbody
+    #chatusers
+      border 1px solid red
+      float right
+      width 150px
+      margin-bottom 5px
+      background-color colors-lightbackground
+      border 1px solid colors-darkbackground
+      padding 3px
+      ul
+        list-style none
+        li
+          font-size 12px
+        li.avail
+          color colors-fontbody
+        li.afk
+          color colors-mediumbackground
+          font-style italic
+      span.title
+        font 11px Verdana
+        font-weight 600
+  #chatline
+    span.name
+      float left
+      width 200px
+      text-align right
+      padding 3px
+    input.chat-message
+      font 11px Courier
+      background-color colors-lightbackground
+      border 1px solid colors-darkbackground
+      width 736px
+    input.disabled
+      background-color colors-background
+    span.connection-state
+      font 10px Verdana
+.login-box
+  width 400px
+  margin 0 auto
+
+.clear
+  clear both
+
+
+.topnav
+  li 
+    list-style none
+    padding 0 0 
+    float left
+    padding-left 8px
+    padding-right 8px
+    border-right  1px solid #222222 
+    border-left  1px solid #222222 
+    background  colors-lightbackground
+
+#logindiv
+  position absolute
+  top  5px
+  right 30px
+
+code
+  white-space pre

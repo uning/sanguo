@@ -6,3 +6,5 @@ t.*
 *.html
 logs/*
 *.pid
+*.b
+vendor

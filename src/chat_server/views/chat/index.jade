@@ -1,0 +1,19 @@
+#chat-interface
+  #chatline
+    input(type='hidden', name='username', value=user.name)
+    input(type='hidden', name='userid', value=user.id)
+    input#chat-server(type='hidden', value='')
+    div
+     span.connection-state
+    span To:
+    input.chat-message(name='touids',value='all',style='width:20%')
+    span Message:
+    input.chat-message.disabled(name='message',style='width:60%', disabled='disabled')
+  #chatwindow
+    ul#chat-messages
+     li init ok
+   //
+    #chatusers(style='display:none')
+      span.title
+        | Users logged in:
+      ul.user-list

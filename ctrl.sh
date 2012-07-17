@@ -16,21 +16,17 @@ myabdir=$(cd $mydir && pwd)
 
 
 
-env='development'
-if [ "$2" == "1" ] ; then
-	env='production'
-fi
 
 
 usage(){
-echo <<HELP
+cat <<HELP
  ctrl prog of sanguo
  usage: $0 {start|stop|restart} <rolef> 
 HELP
   exit 0
 }
 
-rolef=$1
+rolef=$2
 if [ ! -f  "$rolef" ] ; then
 	echo "rolef '$rolef'  not exists. exit"
 	usage
@@ -38,6 +34,7 @@ fi
 
 basename $rolef .js
 pidf=$myabdir/pids/$(basename $rolef .js).pid
+logf=$myabdir/logs/$(basename $rolef .js).log
 echo rolef   =  $rolef
 echo pidf    =  $pidf
 
@@ -80,6 +77,9 @@ case "$1" in
 	restart)
 		stop
 		start
+		;;
+	log)
+		tail $logf
 		;;
 	*)
 		usage

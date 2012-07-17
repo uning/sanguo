@@ -1,6 +1,16 @@
 /**
+ *  使用redis 记录用户登录
+ *
+ *
+ * 不同连接用户间通信：
+ *  跨服务器永用户聊天,分区
+ *    $servername:crossschat -- channel
+ *   聊天服务器收到后,找相关用户是否在线,发送信息
+ *  
+ *
+ *   
  * 
-*/
+ */
 
 ChatUser = function(){
 	this._t = new Date();
@@ -33,6 +43,7 @@ ChatUser.prototype.init = function(){
 	})
 
 }
+
 ChatUser.prototype.getRecentMsgs = function(callback){
 	var mid = 'msg:'+ this.id
 	var old = new Date().getTime() - 86400*1000*1;
@@ -138,10 +149,10 @@ exports.UserOnlineRegistry = {
 	 */
 	clearTimeOutUser:function(t){
 		log.info('do clearTimeOutUser ...');
-		var to = t || 1800000,now = new Date().getTime(),u
+		var to = t || 3600000,now = new Date().getTime(),u
 		for(id in this._currentUsers){
 			u = this._currentUsers[id]
-			if(u.lastseen.getTime() + to < now && u.socket == null ){
+			if(u.lastseen.getTime() + to < now){
 				delete  this._currentUsers[userid];
 				log.debug('clearTimeOutUser:',u)
 			}
@@ -213,6 +224,20 @@ exports.UserOnlineRegistry = {
 	getAll: function() {
 		return this._currentUsers
 	},
+	getPage: function(from,to) {
+		var c=0 ,i,ret = {}
+		from = +from || 0;
+		to  = +to || +from + 20;
+		for (i in this._currentUsers){
+			c += 1;
+			if(c > to)
+				break;
+			if(c > from )
+				ret[i] =  this._currentUsers[i]
+
+		}
+		return ret;
+	},
 
 	getUser: function(userid) {
 		if (userid in this._currentUsers) {
@@ -226,6 +251,8 @@ exports.UserOnlineRegistry = {
 			this._currentUsers[groupid][userid] = 1;
 		}
 	}
+
+
 
 };
 
