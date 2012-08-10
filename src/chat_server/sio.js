@@ -22,7 +22,7 @@ sio.configure( function(){
 	var cookieParser = express.cookieParser();
 	//处理连接，ip 封禁
 	//根据cid 处理 等 
-	sio.set('authorization', function (handshakeData, callback) {
+	sio.set('authorization', function (handshakeData, next) {
 		//console.log('handshakeData',handshakeData);
 		cookieParser(handshakeData,null,function(){
 			var u,uname
@@ -30,12 +30,12 @@ sio.configure( function(){
 			auth.loadUser(handshakeData,null,function(){
 				if(handshakeData.currentUser){
 					u = handshakeData.currentUser.id;
-					callback(null, true);
+					next(null, true);
 					uname = handshakeData.currentUser.name || handshakeData.currentUser.email
 					handshakeData.user = uor.addUser(u,uname)
 					log.debug('cookie handshake ok ',handshakeData.user.id)
 				}else{
-					callback(null, false);
+					next(null, false);
 					log.warn('cookie handshake error : no userid',handshakeData)
 				}
 			});

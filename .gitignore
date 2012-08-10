@@ -7,4 +7,5 @@ t.*
 logs/*
 *.pid
 *.b
+jsdocs
 vendor

@@ -1,3 +1,4 @@
+
 exports.helpers = {
   nameAndVersion: function(name, version) {
     return name + ' v' + version;

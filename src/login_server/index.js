@@ -22,11 +22,8 @@ var express = require('express')
 
 
 // include commonjs-utils and extensions
-
 // create server object
 module.exports = app = express.createServer();
-
-
 
 
 
@@ -53,29 +50,39 @@ app.configure(function(){
     { src: __dirname + '/stylus', dest: __dirname + '/public', compile: compile }
   ));
   app.use(express.bodyParser());
-  app.use(express.cookieParser());
   // use connect-mongo as session middleware
   //app.use(express.session({secret: 'topsecret',store: new MongoStore(app.set('mongodb'))}));
 
-  app.use(express.session({secret: 'topsecret',store: new RedisStore({client: comm.getRedis(s.get('sessionRedis'),{exclusive:true}) })}));
+
+  app.use(express.cookieParser());
+  //not use session
+  //app.use(express.session({secret: 'topsecret',store: new RedisStore({client: comm.getRedis(s.get('sessionRedis'),{exclusive:true}) })}));
 
   app.use(express.methodOverride());
   app.use(app.router);
+
   // use express logger
   app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(s.WORKROOT + '/public'));
 
 });
 
 //configure mongoose models
-loginuser = require('../model/loginuser.js');
-app.User = User = loginuser.get(comm.getMongoose(s.get('userserver')));
+var loginuser = require('../model/loginuser.js');
+var User = app.User = loginuser.get(comm.getMongoose(s.get('userserver')));
 
 
+//route's
+app.all('/debug',function(req, res) {
+	res.render('debug', {
+		locals: {
+			str: 'QUERY:\n' +util.inspect(req.query)  + '\nPOST:\n'  + util.inspect(req.body)
+			+'\nCOOKIE:\n' + util.inspect(req.cookies) //+ '\nreq:\n' + util.inspect(req)
+		}
+	});
+});
 
-
-app.get('/',function(req, res) {
-	console.log('req.params',req.params);
+app.post('/api',function(req, res) {
 	res.render('debug', {
 		locals: {
 			str: 'QUERY:\n' +util.inspect(req.querys)  + '\nPOST:\n' + +util.inspect(req.body)
@@ -88,13 +95,8 @@ app.get('/',function(req, res) {
 
 
 app.run = function(){
-	app.listen(s.get('listenPort',80));
-	// TODO: implement cluster as soon as its stable
-  /* cluster(app)
-	.set('workers', 2)
-	.use(cluster.debug())
-	.listen(app.set('port'));*/
-   log.info("Chat app server listening on port ", app.address().port);
+   app.listen(s.get('listenPort',80));
+   log.info( s.get('role','login_server') +" listening:",  app.address() );
 }
 
 if (!module.parent) {

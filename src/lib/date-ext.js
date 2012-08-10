@@ -39,3 +39,12 @@ exports.toReadableDate = function(inputDate, formatType) {
   }
 };
 
+/**
+ *  获取 unix 时间戳
+ *  @param {Date} d 日期对象
+ */
+exports.unixtm = function(d){
+	var nowdate = d || new Date();
+	return Math.floor(nowdate.getTime()/1000);
+}
+

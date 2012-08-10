@@ -6,11 +6,19 @@ exports.AuthHelper = AuthHelper = {
    * @param express response
    * @param express next function
   */
-	authFromCid: function(req, res, next) {
-		var uid = ID.parseCid(req.cookies.cid);
-		log.debug('authFromCid', req.cookies.cid,uid)
-		if(uid){
-			User.findOne({ _id: +uid }, function(err, user) {
+	authFromCid: function(req, res, next){
+		var cid = req.param('cid');
+		if(!cid)
+			cid = req.cookies.cid;
+		if(!cid){
+			res && res.redirect('/login') || res || next()
+		}
+		var ret  = ID.parseCid(req.cookies.cid);
+		if(ret)
+			var uid = ret[0];
+		log.debug('authFromCid',cid,uid)
+		if(ret &&  uid){
+			User.findOne({ _id: + uid }, function(err, user) {
 					if (user) {
 						//console.log(__filename,err,user,user.id)
 						req.session = req.session || {};
@@ -40,10 +48,8 @@ exports.AuthHelper = AuthHelper = {
 				req.currentUser = req.session.user
 				log.debug('auth pass session');
 				next();
-			} else if (req.cookies.cid) {
-				AuthHelper.authFromCid(req, res, next);
 			} else {
-				res && res.redirect('/') || res || next();
+				AuthHelper.authFromCid(req, res, next);
 			}
 	}
 };

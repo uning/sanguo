@@ -29,6 +29,10 @@ js: $(JSFILES)
 doc: $(MDFILES) $(HTMLFILES) 
 	@echo $@ $<
 
+jsdoc:
+	@./tools/jsdoc.sh
+	
+
 test: 
 	NODE_ENV=test mocha \
 		--require should \

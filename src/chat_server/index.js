@@ -35,8 +35,8 @@ module.exports = app = express.createServer();
 
 // setup helpers
 var helper = require('./helpers.js')
-app.helpers(helper.helpers);
-app.dynamicHelpers(helper.dynamicHelpers);
+app.locals(helper.helpers);
+app.locals(helper.dynamicHelpers);
 
 
 
@@ -44,7 +44,6 @@ app.dynamicHelpers(helper.dynamicHelpers);
 
 //configure server instance
 app.configure(function(){
-
 
 
   //配置server,使用redis
@@ -76,7 +75,7 @@ app.configure(function(){
   app.use(app.router);
   // use express logger
   app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }));
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(s.WORKROOT + '/public'));
 });
 
 //configure mongoose models
@@ -106,7 +105,7 @@ app.run = function(){
 	.set('workers', 2)
 	.use(cluster.debug())
 	.listen(app.set('port'));*/
-   log.info("Chat app server listening on port ", app.address().port);
+   console.log( s.bootconfig.role + " listen:",s.get('listenPort',8880));
 }
 
 if (!module.parent) {

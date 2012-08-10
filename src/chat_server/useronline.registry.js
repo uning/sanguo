@@ -11,7 +11,6 @@
  *   
  * 
  */
-
 ChatUser = function(){
 	this._t = new Date();
 	this._rmsgs = []

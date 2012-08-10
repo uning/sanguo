@@ -39,13 +39,18 @@ var ID = module.exports = {
 		if( !ret[1] ||  +ret[1] < 10000){
 			return null;
 		}
-		return ret[0];
+
+		return ret;
 	},
 
-	genCid: function(uid,info) {
-		var cc  = uid + "_" + Math.floor(new Date().getTime()/1000);
+	/**
+	 * 生成 登录token
+	 *
+	 */
+	genCid: function(uid,info ,tm) {
+		var cc  = uid + "_" + tm || Math.floor(new Date().getTime()/1000);
 		if(info)
-			cc += '_' + PHP.serialize(info);
+			cc += '_' + info
 		return ID.encodeStr(cc);
 	},
 

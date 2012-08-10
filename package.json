@@ -1,12 +1,13 @@
 {
 	"name": "sangou",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "A webgame sanguo backend",
 	"keywords": [
 		"sanguo",
 		"javascript"
 	],
-	"maintainers": [{
+	"maintainers": [
+		{
 		"name": "tingkun",
 		"email": "uning.ztk@gmail.com",
 		"web": "http://blog.tingkun.com"
@@ -22,17 +23,17 @@
 		"web": "http://github.com/uning/sanguo/issues"
 	},
 	"repositories": [
-	{
+		{
 		"type": "git",
 		"url": "http://github.com/uning/sanguo.git"
 	}
 	],
 	"dependencies": {
-		"socket.io" : "~0.6.0",
-		"express"    : ">=0.9.0",
+		"socket.io" : ">=0.8.0",
+		"express"    : ">=3.0.0"
 	},
 	"devDependencies" : {
-		"mocha" : ">=0.0.1",
+		"mocha" : ">=0.0.1"
 	},
 	"engines" : { "node" : ">=0.6.0" },
 	"directories": {
@@ -40,4 +41,3 @@
 	},
 	"main": "./index.js"
 }
-

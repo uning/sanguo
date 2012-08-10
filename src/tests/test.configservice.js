@@ -5,9 +5,9 @@ var srcdir = '../'
 ,s = require(srcdir + '/lib/configservice')
 ,should = require('should')
 
-//*
+process.env.BOOTFILE = __dirname + '/../../roleconf/login_server.dev.js'
+/*
 
-		process.env.BOOTFILE = __dirname + '/../../roleconf/login_server.dev.js'
 		delete require.cache[process.env.BOOTFILE]
 		var ro = require(process.env.BOOTFILE);
 		s.btload('login_server.dev',function(err,o){
@@ -44,7 +44,7 @@ describe('configservice', function() {
 	it('test lsave ',function(done){
 		done()
 	})
-	it('test bload /save',function(done){
+	it('test nload /save',function(done){
 		//*
 		s.nload('login_server.dev',function(err,o){
 	      console.log('btnload');

@@ -1,8 +1,8 @@
 var r = module.exports = {
 	 role: 'chat_server.dev' // override by loader save from filename 
 	,sessionRedis: 'redis://localhost:53000'
-	,confserver: 'mongodb://127.0.0.1:35050/sanguo'
-	,userserver: 'mongodb://127.0.0.1:35050/sanguo'
+	,confserver: 'mongodb://127.0.0.1:35050/jsanguo'
+	,userserver: 'mongodb://127.0.0.1:35050/jsanguo'
 	,redisserver: 'redis://localhost:53000'
 	
 	,clearTimeOutUser:{

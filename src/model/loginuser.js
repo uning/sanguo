@@ -143,5 +143,4 @@ schema._NAME = comm.getModelName(__filename);//将model名固定
 exports.get = function(moncon,collname){
 	collname = collname || schema._NAME;
 	return   moncon.model(schema._NAME, schema,collname);
-
 }

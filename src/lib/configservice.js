@@ -2,8 +2,8 @@
  配置
  所有配置文件以代码方式维护
  包含一个 
-  mefile
-  confserver monodb
+  mefile      -- 文件名
+  confserver  -- 存储配置的monodb
 
   l -- local
   n -- network
@@ -70,11 +70,23 @@ var prettyjson = function(o,space,spacer){
 
 
 
+
 var s = module.exports = {
 
+	/**
+	 * 顶层目录
+	 */
+    WORKROOT: WORKROOT,
+
+	/**
+	 * 启动配置
+	 */
 	bootconfig:{},
 
 
+	/**
+	 * 获取存储配置的数据库model 
+	 */
 	getModel: function(){
 		if(this.model){
 			return this.model;
@@ -82,6 +94,7 @@ var s = module.exports = {
 		var config_schema = new mongoose.Schema({
 			_id: { type: String ,/* */ unique:true }
 		},{collection:'configs',strict:false});
+
 		var CONFSERVER = this.bootconfig.confserver ||process.env.CONFSERVER ||  'mongodb://127.0.0.1:35050/sanguo';
 		log.debug('getModel() ',CONFSERVER ,typeof(CONFSERVER),CONFSERVER === 'mongodb://127.0.0.1:35050/sanguo')
 		this.mgserver  =  mongoose.createConnection(CONFSERVER);//只创建一次
@@ -121,9 +134,11 @@ var s = module.exports = {
 			callback(err)
 		})
 	}
+
   /**
    * 加载配置文件,默认加载启动配置
-   * @param {Object} confo 
+   * @param {String} file
+   * @param {Function} callback
    * @return 
    * @api public
    */
@@ -139,7 +154,6 @@ var s = module.exports = {
 			confo.role = path.relative(WORKROOT,confo.mefile) //自动获取role
 		}catch (e){
 			nex = false
-			
 			callback('lload '+ file +' failed :' + e.message)
 		}
 		if(nex)
@@ -181,6 +195,11 @@ var s = module.exports = {
 	}
 
 
+	/**
+	 *
+	 * 保存配置文件到数据库
+	 *
+	 */
 	,nsave:function(confo,callback){
 		callback = callback || function(){}
 		if(!confo){
@@ -211,6 +230,7 @@ var s = module.exports = {
 
 	/**
 	 * 启动时调用
+	 * @param {String} file
 	 */
 	,btload : function(file,cb){
 		cb = cb || function(){}
@@ -258,7 +278,6 @@ var s = module.exports = {
 
 	//================
 	//load 之后可以用的方法
-	
 	,get : function(name,def){
 		if(s.bootconfig[name])
 			return s.bootconfig[name];

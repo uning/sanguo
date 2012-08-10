@@ -3,11 +3,11 @@
 app.get('/',function(req, res) {
 	auth.loadUser(req,null,function(){
 		if (req.currentUser) {
-      res.render('index', {
-        locals: {
-          user: req.currentUser
-        }
-      });
+			res.render('index', {
+				locals: {
+					user: req.currentUser
+				}
+			});
 			return;
 		}
 		//*/
@@ -98,7 +98,7 @@ app.post('/register', function(req, res) {
 					locals: { register: uo }
 				});
 			}else{
-				 req.session.userid = id;
+				 req.session.user = uo;
 				 req.flash('info', 'Registration successful');
 				 res.cookie('cid',ID.genCid(id,'s1'), { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
 				 res.redirect('/');

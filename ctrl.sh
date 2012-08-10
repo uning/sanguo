@@ -21,12 +21,12 @@ myabdir=$(cd $mydir && pwd)
 usage(){
 cat <<HELP
  ctrl prog of sanguo
- usage: $0 {start|stop|restart} <rolef> 
+ usage: $0 <rolef> {start|stop|restart|log} 
 HELP
   exit 0
 }
 
-rolef=$2
+rolef=$1
 if [ ! -f  "$rolef" ] ; then
 	echo "rolef '$rolef'  not exists. exit"
 	usage
@@ -67,7 +67,7 @@ stop(){
 
 }
 
-case "$1" in
+case "$2" in
 	start)
 	    start
 	    ;;
@@ -79,7 +79,9 @@ case "$1" in
 		start
 		;;
 	log)
-		tail $logf
+		shift
+		shift 
+		tail $logf $*
 		;;
 	*)
 		usage

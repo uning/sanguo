@@ -4,9 +4,9 @@ var r = module.exports = {
 	 ,listenPort:8880
 
 	,sessionRedis: 'redis://localhost:53000'
-	,confserver: 'mongodb://127.0.0.1:35050/sanguo'
-	,dbserver: 'mongodb://127.0.0.1:35050/sanguo'
-	,userserver: 'mongodb://127.0.0.1:35050/sanguo'
+	,confserver: 'mongodb://127.0.0.1:35050/jssanguo'
+	,dbserver: 'mongodb://127.0.0.1:35050/sjsanguo'
+	,userserver: 'mongodb://127.0.0.1:35050/jssanguo'
 	,cacheserver: 'redis://localhost:53000'
 	,sections: {
 		 s1: {
