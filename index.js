@@ -67,12 +67,18 @@ process.on('exit',function(){
 	log.warn('process ',process.pid + ' exit, running time: ', process.uptime(),' seconds')
 	fs.unlinkSync(pidfile)
 })
+
+process.on('uncaughtException',function(ex){
+	log.warn('process ',process.pid + ' uncaughtException, running time: ', process.uptime(),' seconds')
+   console.log('Caught exception: ', ex);
+	process.exit(0);
+})
 process.on('SIGHUP', function () {
   log.error('Got SIGHUP signal.');
 });
 process.on('SIGINT', function () {
     log.error('Got signal SIGINT');//kill
-	process.exit(0);
+	 process.exit(0);
 });
 process.on('SIGTERM', function () {
     log.info('Got SIGTERM signal.' );

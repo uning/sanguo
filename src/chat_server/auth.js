@@ -7,11 +7,15 @@ exports.AuthHelper = AuthHelper = {
    * @param express next function
   */
 	authFromCid: function(req, res, next){
-		var cid = req.param('cid');
+
+		var cid = req.query && req.query.cid;// req.param('cid');
 		if(!cid)
-			cid = req.cookies.cid;
+			cid = req.body && req.body.cid;
+		if(!cid)
+			cid = req.cookies && req.cookies.cid;
 		if(!cid){
 			res && res.redirect('/login') || res || next()
+			return;
 		}
 		var ret  = ID.parseCid(req.cookies.cid);
 		if(ret)

@@ -9,3 +9,4 @@ logs/*
 *.b
 jsdocs
 vendor
+node_modules

@@ -5,7 +5,7 @@ exports.helpers = {
   },
   
   appName: 'chat-server',
-  version: '0.01'
+  version: '0.0.1'
 };
 
 // flash message class

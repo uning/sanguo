@@ -35,8 +35,8 @@ module.exports = app = express.createServer();
 
 // setup helpers
 var helper = require('./helpers.js')
-app.locals(helper.helpers);
-app.locals(helper.dynamicHelpers);
+//app.locals(helper.helpers);app.locals(helper.dynamicHelpers);
+app.helpers(helper.helpers);app.dynamicHelpers(helper.dynamicHelpers);
 
 
 
@@ -83,16 +83,33 @@ loginuser = require('../model/loginuser.js');
 app.User = User = loginuser.get(comm.getMongoose(s.get('userserver')));
 
 
+//*
 // require routes
 require('./routes/chat');
 require('./routes/user');
 require('./routes/help');
 require('./routes/admin');
-
+//*/
+/*
+app.get('/',function(req,res){
+		res.render('user/login', {
+			locals: {
+				user: new User()
+			}
+		});
+		if (req.session && req.session.user) {
+			req.currentUser = req.session.user
+			log.debug('auth pass session');
+			next();
+		} else {
+		}
+})
+*/
 
 
 require('./sio');
 sio.log = log;
+
 rc = comm.getRedis(s.get('redisserver'))
 
 app.run = function(){
