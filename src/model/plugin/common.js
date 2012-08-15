@@ -16,17 +16,20 @@ module.exports = exports = function CommonPlugin (schema, options) {
     function getQueryField(opts){
 		var ret = {};
 		var k,vv,kk,v;
-			for( k in opts.update ){
-				v = opts.update[k]
-				for( kk in  v){
-					ret[kk] = 1;
-				}
+		if('fields' in opts)
+			return opts.fields
+
+		for( k in opts.update ){
+			v = opts.update[k]
+			for( kk in  v){
+				ret[kk] = 1;
 			}
-			for( k in opts.query ){
-				if(k != '_id' && k.substr(0,1) != '$' )
-					ret[k] = 1;
-			}
-			return ret;
+		}
+		for( k in opts.query ){
+			if(k != '_id' && k.substr(0,1) != '$' )
+				ret[k] = 1;
+		}
+		return ret;
 	}
 
 	//让返回值具有schema定义的方法
@@ -57,7 +60,7 @@ module.exports = exports = function CommonPlugin (schema, options) {
 	 *
 	 **/
 	schema.statics.fam = function (opts,cb) {
-		var fields = 'fields' in opts ? opts.fields : getQueryField(opts)
+		var fields = getQueryField(opts)
 		var self = this;
 		var mycb = function (err,o){
 			if(o){
@@ -72,6 +75,25 @@ module.exports = exports = function CommonPlugin (schema, options) {
 				cb(err,o)
 			}
 		}
+		var query = this.find(opts.query);
+		query.setOptions( 
+			{
+				upsert: 'upsert'  in opts ? opts.upsert : true
+				,'new': 'new' in opts ? opts.new : true
+			}
+		);
+		//console.log('fam fields',fields);
+		query.select(fields);
+		query.bind(this, 'findOneAndUpdate', opts.update);
+
+		if ('undefined' == typeof cb)
+			return query;
+
+		this._applyNamedScope(query);
+		return query.findOneAndUpdate(cb);
+
+		/*
+
 
 		this.collection.findAndModify(
 			opts.query
@@ -83,6 +105,7 @@ module.exports = exports = function CommonPlugin (schema, options) {
 				,fields:  fields
 			}
 			,mycb)
+			*/
 	}
 	//findAndRemove
 	schema.statics.far = function (opts,cb) {
@@ -174,6 +197,7 @@ module.exports = exports = function CommonPlugin (schema, options) {
 	//只读id
 	schema.virtual('id')
 	.get(function() {
+		//console.log('virtual(id)',this._id,typeof this._id )
 		if(typeof this._id  == 'object')
 			return this._id.toHexString();
 		return this._id //.toString();

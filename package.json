@@ -1,5 +1,5 @@
 {
-	"name": "sangou",
+	name: "sangou",
 	"version": "0.0.1",
 	"description": "A webgame sanguo backend",
 	"keywords": [
@@ -26,10 +26,14 @@
 	],
 	"dependencies": {
 		"socket.io" : ">=0.8.0",
-		"express"    : ">=2.5.0"
+		"express"    : ">=2.9.9",
+		"stylus"    : ">=0",
+		"jade"    : ">=0"
+		"mongoose"    : ">=3.0"
 	},
 	"devDependencies" : {
-		"mocha" : ">=0.0.1"
+		"mocha" : ">=0.0.1",
+		"supperagent" : ">=0"
 	},
 
 	"engines" : { "node" : ">=0.6.0" },

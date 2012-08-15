@@ -16,6 +16,7 @@
     * lib    -- 库文件
 	* tests  -- 测试文件
 	* model  -- 数据model文件
+	* chat_server   --  聊天服务器
   * roleconf    -- 程序启动配置文件
 
 

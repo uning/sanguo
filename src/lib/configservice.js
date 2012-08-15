@@ -279,12 +279,13 @@ var s = module.exports = {
 	//================
 	//load 之后可以用的方法
 	,get : function(name,def){
-		if(s.bootconfig[name])
+		if(s.bootconfig && name in s.bootconfig)
 			return s.bootconfig[name];
 
-		if(def)
+		if(typeof def !== undefined )
 			return def;
-		log.error('get config ', name ,' not find')
+		log.error('get boot config ', name ,' not find')
+		throw new Error('get boot config '+ name  + ' not find')
 		//直接退出，差关键配置
 		process.exit(1);
 

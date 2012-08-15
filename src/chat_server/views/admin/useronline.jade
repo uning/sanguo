@@ -1,16 +1,19 @@
 
-h3 在线用户列表
+extends ../layout
+block body
 
-a(href='?pageid=0') 第一页
+ h3 在线用户列表
 
-table(border=1)
- thead  
+ a(href='?pageid=0') 第一页
+
+ table(border=1)
+  thead  
       th 名字 
       th 用户id
       th 操作
       th 登录时间 
       th 最后操作时间 
- each uo,key in users
+  each uo,key in users
     tr
       td #{uo.n}
       td #{uo.id}

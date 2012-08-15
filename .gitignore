@@ -10,3 +10,5 @@ logs/*
 jsdocs
 vendor
 node_modules
+public/compiled
+tags

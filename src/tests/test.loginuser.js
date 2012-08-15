@@ -10,65 +10,70 @@ var srcdir = '../'
 ,should = require('should')
 
 process.env.BOOTFILE = __dirname + '/../../roleconf/login_server.dev.js'
-s.btload()
-
+s.bootconfig = require(process.env.BOOTFILE)//s.btload()
 //var describe = describe || function(){}
-var uri = 'mongodb://localhost:35050/test'
 uri = s.bootconfig.dbserver;
+uri = s.bootconfig.confserver;
+uri = 'mongodb://localhost:35050/test'
 
 var mc = comm.getMongoose(uri)
 var m  = ls.get(mc,'jsuser') 
-uri = s.bootconfig.confserver;
-
-var pid = 'test1112';
 
 
-m.findOne({pid:pid},function(err,u){
-	console.log(err,u);
-})
-false && 
-m.far({query:{pid:pid}},function(err,u){
-	var cache = comm.getCache();
-	cache.del(pid,function(){
-		m.genid(pid,{name:'name ' + pid,_password:'abcdef'},function(err,nid,isNew,u){
-			console.log(err,nid,isNew,u);
+var id = 1,pid = 'testpid'
+if(  1 )
+describe('loginuser', function() {
+	it('CommonPlugin  fam',function(done){
+		var nid = 2 
+		m.fam({
+			query:{_id:nid}
+			,update:{'$set':{name:'tingkun'},'$inc':{cc:6}}
+		},function(err,o){
+			//console.log(err,o);
+			o.get('cc').should.be.a(typeof 6);
+			should.not.exist(err);
+			o.name.should.eql('tingkun');
+			done();
+		})
+	});
+	it('genid',function(done){
+				
+		m.far({query:{pid:pid}},function(err,u){
+			should.not.exist(err);
+			m.far({query:{_id:'igen_incid'}},function(err,u){ //删除测试数据
+				should.not.exist(err);
+				var pid = 'test1111';
+				m.genid(pid,{name:'name of ' + pid},function(err,nid,isNew,u){
+					//console.log(err,nid,isNew,u);
+					should.not.exist(err);
+					nid.should.eql(id)
+					//should.strictEqual(isNew,true)
+					done();
+				});
+			})
 		});
 
-	})
-});
-
-
-if( false)
-describe('loginuser', function() {
-	it('idget',function(done){
-		m.idget(id,function(err,o){
-
-			m.findOne({_id:id},function(err,uo){
-				uo.get('_id').should.eql(o.get('_id'))
-				done();
-			})
-		})
 
 	})
+
+	/*
 	it('obj2model', function(done) {
-		m.far({_id:id},function(){
-			var now = new Date().getTime();
-			var nf = 'newfield' + now ,nv = 'newvale' + now
+		var now = new Date().getTime();
+		var nf = 'newfield' + now ,nv = 'newvale' + now
 
-			var uo = m.obj2model({pid:'testuser1'},id);
-			uo.set(nf, nv);
-			uo.set('name', '廷坤');
-			uo.save(function(err,o){
+		
+		var uo = m.obj2model({pid:'testuser1'},id);
+		uo.set(nf, nv);
+		uo.set('name', '廷坤');
+		uo.save(function(err,o){
+			if(err)
+				console.log('uo.save',o,err)
+			m.findOne({_id:id},function(err,u){
 				if(err)
-					console.log('uo.save',o,err)
-
-				m.findOne({_id:id},function(err,u){
-					if(err)
-						console.log('uo.save m.findOne ',nf,u,err)
-					if(u)u.get(nf).should.eql(nv) 
+					console.log('uo.save m.findOne ',nf,u,err)
+				if(u)u.get(nf).should.eql(nv) 
 					done()
-				})
-			});
+			})
 		});
 	});
 
@@ -149,23 +154,8 @@ describe('loginuser', function() {
 			  });
 	});
 
-	it('genid',function (done){
-		var pid = 'test1111';
-		m.far({query:{pid:pid}},function(err,u){
-			var cache = comm.getCache();
-			cache.del(pid,function(){
-				m.genid(pid,{name:'name ' + pid},function(err,nid,isNew,u){
-					console.log(err,nid,isNew,u);
 
-				});
-
-			})
-		});
-			
-		done();
-	})
-
-
+    //*/
 	
 
 })

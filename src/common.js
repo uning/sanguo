@@ -38,3 +38,4 @@ exports.getFileLogid = function(file){
 log = exports.getLogger()
 ,redispool = new RedisPool({log:log})
 
+

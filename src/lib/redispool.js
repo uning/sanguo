@@ -54,9 +54,7 @@ RedisPool.prototype.alloc = function(dsn, options) {
 	if(!dsn) return null;
   var parsed = this.parse(dsn);
   this.log.info('Alloc: ' + dsn + ' (' + JSON.stringify(options) + ')');
-
   options = options || {};
-
   return (options.exclusive)
     ? this._allocExclusive(parsed)
     : this._allocInPool(parsed, options);

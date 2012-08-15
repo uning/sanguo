@@ -1,8 +1,6 @@
 var r = module.exports = {
 	 role: 'login_server.dev' // override by loader save from filename 
-
-	 ,listenPort:8880
-
+	,listenPort:8880
 	,sessionRedis: 'redis://localhost:53000'
 	,confserver: 'mongodb://127.0.0.1:35050/jssanguo'
 	,dbserver: 'mongodb://127.0.0.1:35050/sjsanguo'

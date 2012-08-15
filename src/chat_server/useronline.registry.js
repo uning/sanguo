@@ -1,20 +1,43 @@
+
 /**
+ *
+ * 内存数据,所有连接的玩家
+ *
+ *
  *  使用redis 记录用户登录
  *
  *
  * 不同连接用户间通信：
- *  跨服务器永用户聊天,分区
+ *   跨服务器永用户聊天,分区
  *    $servername:crossschat -- channel
  *   聊天服务器收到后,找相关用户是否在线,发送信息
  *  
  *
  *   
  * 
- */
+*/
+
+// get required modules
+var libdir = '../lib/'
+,s = require(libdir + 'configservice.js')
+,comm = require(s.WORKROOT + '/src/common.js')
+
+
+var json = require('commonjs-utils/lib/json-ext')
+,base64 = require('commonjs-utils/lib/base64')
+
+
+var  rc ;//redis client
+var  server;
+
+var log = comm.getLogger(s.bootconfig.role); 
+
 ChatUser = function(){
 	this._t = new Date();
 	this._rmsgs = []
 }
+
+
 /**
  * 获取数据
 */
@@ -26,8 +49,8 @@ ChatUser.prototype.init = function(){
 	else{
 		id = parseInt(id) ; //toint 
 	}
-	//获取名字及好友列表
-	User.findById(id,function(err,user){
+	/*获取名字及好友列表
+	LoginUser.findById(id,function(err,user){
 		if(user){
 			that.fids = user.fids || []
 			uname = uname || user.name ||  user.pinfo && user.pinfo.name || user.session && ( user.session.name || user.session.pid) 
@@ -40,7 +63,7 @@ ChatUser.prototype.init = function(){
 			log.error('init ChatUser failed',id)
 		}
 	})
-
+*/
 }
 
 ChatUser.prototype.getRecentMsgs = function(callback){
@@ -56,26 +79,26 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 			for(var i = 0; i < res.length || i > 20; i++ ){
 				mo = json.parse(res[i]);
 				if(mo._t  > old)
-				rmsgs.push(mo);
+					rmsgs.push(mo);
 			}
 			callback(null,rmsgs);
 		}
 	})
 }
+
 /**
  * 向redis 服务器注册
- */
+*/
 ChatUser.prototype.login = function(){
 	var mid = 'msg:'+ this.id
 	,multi = rc.multi()
 	,a
 	,rmsgs = this._rmsgs
 	,i
-
 	multi
-	.sadd(app.set('host') + ':onlineusers',this.id)
-	.hset('user2server',this.id,app.set('host'))
-	.set('info:'+this.id,json.stringify({lastseen:this.lastseen,server: app.set('host'),systime:this.systime}))
+	.sadd(server + ':onlineusers',this.id)
+	.hset('user2server',this.id,server)
+	.set('info:'+this.id,json.stringify({lastseen:this.lastseen,server: server,systime:this.systime}))
 	.exec(function(err,r){
 		if(err){
 			log.error('ChatUser connect store error',err,r)
@@ -92,7 +115,7 @@ ChatUser.prototype.tome = function(msg){
 	if(this.socket){
 		this.socket.emit('message',msg)
 		rmsgs.push(msg);
-		if(rmsgs.length > 10){
+		if(rmsgs.length > 100){
 			rmsgs.pop();
 		}
 		return; //wether to save history
@@ -114,7 +137,10 @@ ChatUser.prototype.tome = function(msg){
 }
 
 
-exports.UserOnlineRegistry = {
+/**
+ *
+ */
+var uor = {
 	_currentUsers: {},
 	_currentGroups: {}, //群
 	_banUsers:{},
@@ -122,7 +148,7 @@ exports.UserOnlineRegistry = {
 	/** 
 	 * 初始化封禁用户列表等
 	 *
-     */
+*/
 	init:function(){
 
 	},
@@ -131,7 +157,7 @@ exports.UserOnlineRegistry = {
   /**
    * 用户连接聊天服务器时时调用
    * 记录用户登录时间
-   */
+*/
 	addUser: function(userid,username,state,socket) {
 		user = this._currentUsers[userid] || new ChatUser()
 		user.n = username;
@@ -145,7 +171,7 @@ exports.UserOnlineRegistry = {
 
 	/**
 	 * 清理断开的用户,默认半小时 
-	 */
+*/
 	clearTimeOutUser:function(t){
 		log.info('do clearTimeOutUser ...');
 		var to = t || 3600000,now = new Date().getTime(),u
@@ -155,29 +181,29 @@ exports.UserOnlineRegistry = {
 				delete  this._currentUsers[userid];
 				log.debug('clearTimeOutUser:',u)
 			}
-		
+
 		}
 		log.info('do clearTimeOutUser end');
-		
+
 	},
 
 	/**
 	 * 离线消息存储
-	 */
-	 offlineMsg:function(touid,msg){
-		 var uo = new ChatUser();
-		 uo.id = touid;
-		 uo.tome(msg);
-		 log.warn('offlineMsg: to ',uid,' from ',msg._fid)
+*/
+	offlineMsg:function(touid,msg){
+		var uo = new ChatUser();
+		uo.id = touid;
+		uo.tome(msg);
+		log.warn('offlineMsg: to ',uid,' from ',msg._fid)
 
-	 },
+	},
 
 
   /**
    *
    * 用户断开连接时调用
    *
-  */
+*/
 	removeUser: function(userid) {
 		if (userid in this._currentUsers){
 			//user =  this._currentUsers[userid];
@@ -192,7 +218,7 @@ exports.UserOnlineRegistry = {
    * 1  -- connected
    * 2  -- disconnected
    *
-   */
+*/
 	setState: function(userid, state) {
 		if (userid in this._currentUsers) {
 			this._currentUsers[userid].s = state;
@@ -202,7 +228,7 @@ exports.UserOnlineRegistry = {
    /**
 	*
 	*
-    */
+*/
 	getState: function(userid) {
 		if (userid in this._currentUsers) {
 			return this._currentUsers[userid].s;
@@ -249,9 +275,22 @@ exports.UserOnlineRegistry = {
 		if (userid in this._currentUsers) {
 			this._currentUsers[groupid][userid] = 1;
 		}
+	},
+
+	/**
+	 * 
+	 *  启动清理，连接redis
+	 *
+*/
+	start:function(app){
+		var clearTimeOutUser = s.bootconfig['clearTimeOutUser'] && s.bootconfig['clearTimeOutUser'].v  || 60 ;//清除用户周期
+		rc = comm.getRedis(s.get('chatRedis'))
+		server = app.set('host')
+		app.set('model_Uor',uor)
+		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息
+		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
 	}
-
-
-
 };
+
+module.exports = uor;
 

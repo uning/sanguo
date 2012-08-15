@@ -47,7 +47,8 @@ start(){
 		else
 			echo "Start $rolef ..."
 			#nohup  supervisor -n exit -w $mydir/src -- $mydir/index.js -p $pidf  >$logf &
-			nohup node $mydir/index.js  $rolef >$logf &
+			nohup  node $DEBUG $mydir/index.js  $rolef >$logf &
+			#nohup  supervisor -n exit -w $mydir/src -- $mydir/index.js -p $pidf  >$logf &
 			sleep 1
 			tail $logf
 		fi
@@ -77,6 +78,21 @@ case "$2" in
 	restart)
 		stop
 		start
+		;;
+	dstart)
+		DEBUG='--debug-brk'
+		stop
+		killall node-inspector 2>/dev/null
+		start
+		sleep 2
+		echo Waiting server to start
+		nohup node-inspector &
+
+		;;
+	dstop)
+		stop
+		killall node-inspector
+
 		;;
 	log)
 		shift

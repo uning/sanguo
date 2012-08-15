@@ -53,7 +53,7 @@ schema.pre('save', function (next) {
 	next();
 });
 schema.statics.findByPid = function (pid,cb) {
-	return  this.find({}).where({pid:pid}).findOne(cb);
+	return  this.find().where('pid',pid).exec(cb);
 }
 
 
@@ -65,9 +65,8 @@ var cache ; //缓存cache
 schema.statics.genid = function(pid,initdata,cb){
 	cb = cb || function(){} 
 	var self = this,ccb = function(){}
-	cache = cache || comm.getCache() ;
+	var cache = false;
 	initdata = initdata || {}
-
 	var real_gen = function(){
 		self.findOne({pid:pid},function(err,uo){
 			if(err){
@@ -89,14 +88,14 @@ schema.statics.genid = function(pid,initdata,cb){
 					if(err){
 						cb(err,r);
 					}else if(r){
-						
-						cache && cache.set(pid,r.maxid,ccb) ;// 保存缓存
+						var nid = r.get('maxid');
+						cache && cache.set(pid,nid,ccb) ;// 保存缓存
 						initdata.pid = pid
-					   // console.log('initdata',r,r.maxid,initdata);
-						var um =  self.obj2model(initdata,r.maxid);
+						// console.log('initdata',r,r.maxid,initdata);
+						var um =  self.obj2model(initdata,nid);
 						um.isNew = true;
 						um.save(function(err,u){
-							cb(err,r.maxid,true,u);
+							cb(err,nid,true,u);
 						})
 					}
 				})
@@ -139,6 +138,10 @@ schema._NAME = comm.getModelName(__filename);//将model名固定
  * 方便不同mongodb生成，同一schema可以在不同的mongoose
  * 生成model
  *
+ * api public 
+ *
+ * @param moncon {Mongoose.Connecttion}  数据库连接
+ * @param collname {String}              数据库中 collection的名字
  */
 exports.get = function(moncon,collname){
 	collname = collname || schema._NAME;

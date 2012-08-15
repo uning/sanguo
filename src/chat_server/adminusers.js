@@ -1,6 +1,6 @@
 
 
-AdminUsers =  module.exports ={
+module.exports ={
 	"charlie@playcrab.com":{name:"吴磊"},
 	"chengchen@playcrab.com":{name:"程晨"},
 	"chenhk@playcrab.com":{name:"谌红坤"},
