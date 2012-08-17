@@ -3,7 +3,7 @@
 module.exports = function(app,loc){
 	loc = loc || '';
 
-	var auth = app.set('auth');
+	var auth = app.set('myauth');
 
 
 	app.get(loc + '/chat', auth.loadUser, function(req, res, next) {

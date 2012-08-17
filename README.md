@@ -1,5 +1,6 @@
 三国项目后台
 ============
+
   使用mongodb，node(express,socket.io),redis实现服务器
   游戏服务器提供http poll，websocket，flashsocket 连接接口
 
@@ -18,6 +19,7 @@
 	* model  -- 数据model文件
 	* chat_server   --  聊天服务器
   * roleconf    -- 程序启动配置文件
+
 
 
 

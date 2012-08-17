@@ -1,4 +1,5 @@
 
+
 /**
  *
  * 内存数据,所有连接的玩家
@@ -26,11 +27,14 @@ var json = require('commonjs-utils/lib/json-ext')
 ,base64 = require('commonjs-utils/lib/base64')
 
 
-var  rc ;//redis client
-var  server;
-
+var  server;//
+var  _app; //ref to main app
 var log = comm.getLogger(s.bootconfig.role); 
 
+
+/** 
+ * 构造函数
+ */
 ChatUser = function(){
 	this._t = new Date();
 	this._rmsgs = []
@@ -41,7 +45,14 @@ ChatUser = function(){
  *
  *
  */
-function getRedis(u){
+var  _rcs ;//redis client
+function getChatRedis(u){
+	if(rcs && rcs[0])
+		return rcs[0];
+	var rc = comm.getRedis(s.get('chatRedis'))
+	rcs = rcs || [];
+	rcs.push(rc);
+	return rc;
 
 }
 
@@ -76,6 +87,7 @@ ChatUser.prototype.init = function(){
 ChatUser.prototype.getRecentMsgs = function(callback){
 	var mid = 'msg:'+ this.id
 	var old = new Date().getTime() - 86400*1000*1;
+	var rc = getChatRedis(this.id);
 	rc.lrange(mid,0,-1,function(err,res){
 		log.debug(mid ,' recent msg from redis:',res,err);
 		if(err){
@@ -97,6 +109,7 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 * 向redis 服务器注册
 */
 ChatUser.prototype.login = function(){
+	var rc = getChatRedis(this.id)
 	var mid = 'msg:'+ this.id
 	,multi = rc.multi()
 	,a
@@ -123,10 +136,11 @@ ChatUser.prototype.tome = function(msg){
 		this.socket.emit('message',msg)
 		rmsgs.push(msg);
 		if(rmsgs.length > 100){
-			rmsgs.pop();
+			rmsgs.shift();
 		}
 		return; //wether to save history
 	}
+	var rc = getChatRedis(this.id)
 	var mid = 'msg:'+ this.id,multi = rc.multi()
 	if('string' !== typeof msg)
 		strmsg = json.stringify(msg);
@@ -290,8 +304,8 @@ var uor = {
 	 *
      */
 	start:function(app){
+		_app = app;
 		var clearTimeOutUser = s.bootconfig['clearTimeOutUser'] && s.bootconfig['clearTimeOutUser'].v  || 60 ;//清除用户周期
-		rc = comm.getRedis(s.get('chatRedis'))
 		server = app.set('host')
 		app.set('model_Uor',uor)
 		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息

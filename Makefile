@@ -1,8 +1,8 @@
 
-COFFEEFILES =$(shell find . -name '*.coffee')
+COFFEEFILES =$(shell find src -name '*.coffee')
 JSFILES :=  $(COFFEEFILES:.coffee=.js)
 
-#MDFILES = $(shell find . -name '*.md')
+MDFILES = $(shell find doc -name '*.md')
 HTMLFILES := $(MDFILES:.md=.html)
 
 TESTS := $(shell find src/tests -name test.*.js)

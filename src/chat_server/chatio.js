@@ -2,14 +2,15 @@
 var json = require('commonjs-utils/lib/json-ext')
 ,express = require('express')
 
-var chatsio  = module.exports = function(app,server,log,loc){
+
+var chatsio  = module.exports = function(app,loc){
 	loc = loc || '';
 
-	var auth = app.set('auth');
+	var auth = app.set('myauth');
 	var LoginUser = app.set('model_LoginUser');
 	var uor = require('./useronline.registry') //用户列表 
-	var sio =  require('socket.io').listen(server);
-	sio.log = log;
+	var sio =  require('socket.io').listen(app.set('myserver'));
+	sio.log = app.set('mylog');
 
 	//confiure socket io
 	//https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
@@ -32,32 +33,37 @@ var chatsio  = module.exports = function(app,server,log,loc){
 		var cookieParser = express.cookieParser();
 		//处理连接，ip 封禁
 		//根据cid 处理 等 
-		sio.set('authorization', function (handshakeData, next) {
-			//console.log('handshakeData',handshakeData);
-			cookieParser(handshakeData,null,function(){
+		sio.set('authorization', function(handshake, next) {
+			//console.log('handshake',handshake);
+			if(handshake.user){
+				next(null, true);
+				log.info('handshake address, has user',handshake.address);
+				return ;
+			}
+			cookieParser(handshake,null,function(){
 				var u,uname
-				log.info('handshakeData address',handshakeData.address);
-				auth.loadUser(handshakeData,null,function(){
-					if(handshakeData.currentUser){
-						u = handshakeData.currentUser.id;
+				log.info('handshake address',handshake.address);
+				auth.sessionAuth(handshake,null,function(){
+					if(handshake.currentUser){
+						u = handshake.currentUser.id;
 						next(null, true);
-						uname = handshakeData.currentUser.name || handshakeData.currentUser.email
-						handshakeData.user = uor.addUser(u,uname)
-						log.debug('cookie handshake ok ',handshakeData.user.id)
+						uname = handshake.currentUser.name || handshake.currentUser.email
+						handshake.user = uor.addUser(u,uname)
+						log.debug('cookie handshake ok ',handshake.user.id)
 					}else{
 						next(null, false);
-						log.warn('cookie handshake error : no userid',handshakeData)
+						log.warn('cookie handshake error : no userid',handshake)
 					}
 				});
 			});
 
 /*
-		 findDatabyIP(handshakeData.address.address, function (err, data) {
+		 findDatabyIP(handshake.address.address, function (err, data) {
 			 if (err) return callback(err);
 
 			 if (data.authorized) {
-				 handshakeData.foo = 'bar';
-				 for(var prop in data) handshakeData[prop] = data[prop];
+				 handshake.foo = 'bar';
+				 for(var prop in data) handshake[prop] = data[prop];
 				 callback(null, true);
 			 } else {
 				 callback(null, false);

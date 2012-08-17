@@ -1,6 +1,5 @@
 
 var uor = require('../useronline.registry.js');//用户列表 
-
 /**
  * route 添加
  *
@@ -10,7 +9,7 @@ var uor = require('../useronline.registry.js');//用户列表
 module.exports = function(app,loc){
 	loc = loc || '';
 
-	var auth = app.set('auth');
+	var auth = app.set('myauth');
 	// login form route
 	app.get(loc + '/admin/useronline',auth.loadUser,function(req, res) {
 		log.debug('params ',req.params); 

@@ -9,15 +9,15 @@ var ID = require('../../lib/sessionid.js');
 module.exports = function(app,loc){
 	loc = loc || '';
 
-	var auth = app.set('auth');
+	var auth = app.set('myauth');
+	var log = app.set('mylog');
 	var LoginUser = app.set('model_LoginUser');
-	var Admins = require('./adminusers.js');
+	var Admins = app.set('model_Admins');
 
 	// login form route
 	app.get(loc + '/',function(req, res) {
-		auth.loadUser(req,null,function(){
-			console.log('get /',req.currentUser)
-			if (req.currentUser) {
+		auth.sessionAuth(req,null,function(){
+			if(req.currentUser) {
 				res.render('index', {
 					user: req.currentUser
 				});
@@ -25,7 +25,7 @@ module.exports = function(app,loc){
 			}
 			//*/
 			res.render('user/login', {
-				user: new LoginUser
+				user: {}
 			});
 		});
 	});
@@ -38,10 +38,11 @@ module.exports = function(app,loc){
 					req.flash('error', 'Login failed password error ');
 					res.redirect(loc + '/');
 				}else{
-					req.session.user = user;
+					req.session.currentUser = user;
 					var cid =  ID.genCid(user.id,'s1');
 					res.cookie('cid',  cid , { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
 					res.redirect(loc + '/');
+
 					log.info('login',user,cid);
 				}
 			} else {
@@ -52,7 +53,7 @@ module.exports = function(app,loc){
 	});
 
 	//logout user
-	app.get( loc + '/logout', auth.loadUser, function(req, res) {
+	app.get( loc + '/logout', auth.sessionAuth, function(req, res) {
 		if (req.session) {
 			res.clearCookie('cid');
 			req.session.destroy(function() {});
@@ -101,7 +102,7 @@ module.exports = function(app,loc){
 							register: uo 
 						});
 					}else{
-						req.session.user = uo;
+						req.session.currentUser = uo;
 						req.flash('info', 'Registration successful');
 						res.cookie('cid',ID.genCid(id,'s1'), { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
 						res.redirect(loc + '/');

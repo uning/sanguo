@@ -19,21 +19,20 @@ exports.Auth = Auth = {
 		    cid = req.cookies.cid;
 		}
 		if( cid == null ){
-			next('not get cid',req,res);
+			next('not get cid');
 		}
 
 		
 
 		var rr	= ID.parseCid(req.cookies.cid);
 		if(!rr){
-			next('cid parse error',req,res);
+			next('cid parse error');
 		}
 		req._auth = req._auth || {};
         req._auth.uid = rr[0] //用户登录id
         req._auth.lt  = rr[1]   //登录时间
         req._auth.sec = rr[2] //用户登录分区 
-		next(null,req,res)
-
+		next()
 	}
 
 };

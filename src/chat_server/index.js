@@ -13,14 +13,19 @@ var app = module.exports  = express()
 
 //数据库model
 app.set('model_LoginUser',require('../model/loginuser.js').get(comm.getMongoose(s.get('userMongo'))));
-
-require('./auth')(app);
-app.MYDIR = __dirname;
-app.enable('loginhelper');//加载loginheler
-require('../appconf/server')(app,express,s,comm);
+app.set('model_Admins' , require('../model/adminusers.js'));
 
 //create server object
 var server = require('http').createServer(app)
+app.set('myserver',server);
+app.set('mylog',log);
+
+app.MYDIR = __dirname;
+app.enable('loginhelper');//加载loginheler
+require('../appconf/server')(app,express,s,comm);
+require('../appconf/auth')(app);
+
+
 
 
 //*
@@ -31,8 +36,10 @@ require('./routes/help')(app);
 require('./routes/admin')(app);
 //*/
 
+
 //聊天逻辑
-require('./sio')(app,server,log);
+require('./chatio')(app);
+
 
 //运行
 app.run = function(){

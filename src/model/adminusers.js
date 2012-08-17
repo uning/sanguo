@@ -1,6 +1,20 @@
 
 
 module.exports ={
+	isValid:function(email){
+		if(this[email]){
+			return true
+		}else{
+			return false;
+		}
+	},
+	getName:function(email){
+		if(this[email]){
+			return true
+		}else{
+			return false;
+		}
+	},
 	"charlie@playcrab.com":{name:"吴磊"},
 	"chengchen@playcrab.com":{name:"程晨"},
 	"chenhk@playcrab.com":{name:"谌红坤"},
@@ -42,4 +56,5 @@ module.exports ={
 	"adventure_report@playcrab.com":{name:"我的冒险 数据"},
 	"wuxia@playcrab.com":{name:"武侠项目"},
 	"op@playcrab.com":{name:"运营组"}
+	
 }

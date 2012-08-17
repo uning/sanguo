@@ -6,6 +6,7 @@ util = require("util");
 
 var loggers = {};
 exports.get = function(name,opts) {
+	var name = name || 'default'
 	if(loggers[name])
 		return loggers[name];
   return loggers[name] = new Logger(name,opts);
@@ -22,7 +23,7 @@ Logger = function(name,opts) {
 
 levels = ["error", "warn", "info", "debug"];
 
-level2int = {};
+var level2int = {};
 
 padlevels = [];
 
@@ -62,10 +63,12 @@ Logger.prototype.log = function() {
   }
 
   if (this.colors) param.push(" \u001b[39m");
+  /*
   if(typeof this.name  === 'string'){
 	  //param.push(__logid);
 	  param.push(this.name);
   }
+  */
   console.log.apply(console, param);
   return this;
 };

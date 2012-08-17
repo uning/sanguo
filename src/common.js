@@ -35,7 +35,7 @@ exports.getFileLogid = function(file){
 }
 
 //初始化log
-log = exports.getLogger()
+var log = exports.getLogger()
 ,redispool = new RedisPool({log:log})
 
 

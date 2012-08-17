@@ -2,7 +2,7 @@
 
 module.exports = function(app,loc){
 	loc = loc || '';
-	var auth = app.set('auth');
+	var auth = app.set('myauth');
 	// login form route
 	app.get(loc + '/help',auth.loadUser, function(req, res) {
 		var markdown = require('markdown').markdown,fs = require('fs')
