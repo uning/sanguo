@@ -1,5 +1,5 @@
 
-var Api = require('../appconf/api.js')
+var Api = require('../appconf/apiloader.js')
 
 var path = require('path')
 ,fs = require('fs')
@@ -17,8 +17,8 @@ var " +f+ " = module.exports={ \
     fs.writeFileSync(__dirname +'/'+ f + '.js',content);
 }
 
-//*
-false ||  //*/
+/*
+false &&  //*/
 describe('appconf.api',function(){
 	it('testget',function(done){
 		var api = new Api(__dirname );
@@ -26,8 +26,12 @@ describe('appconf.api',function(){
 		api.get('U.login')().should.eql(2);
 
 		genapif('U',3)
-		api.get('U.login')().should.eql(3);
-		done();
+
+		//next tick
+		setTimeout(function(){
+			api.get('U.login')().should.eql(3);
+			done();
+		});
 	})
 
 });

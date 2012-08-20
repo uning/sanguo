@@ -10,15 +10,22 @@ module.exports = function(app,loc){
 	loc = loc || '';
 
 	var auth = app.set('myauth');
+	var log  = app.set('mylog');
+
 	// login form route
 	app.get(loc + '/admin/useronline',auth.loadUser,function(req, res) {
-		log.debug('params ',req.params); 
+		log.debug('params:',req.params); 
+		log.debug('qurery:',req.query); 
 		res.render('admin/useronline', {
 			uor: uor
 			,users: uor.getPage()
 			,user: req.currentUser
 		});
 	});
+
+	app.get('/routes',function(req,res){
+		res.send(200,app.routes);
+	})
 
 
 	// login form route

@@ -1,6 +1,16 @@
 
 var ID = require('../../lib/sessionid.js');
 var fs = require('fs');
+var Apiloader = require('../appconf/apiloader.js');
+var apiloader = new Apiloader(__dirname +'/api');
+
+var es = {
+	restrict:'restrict'
+	,nomethod:'nomethod'
+	,noparam:'noparam'
+	,nohandler:'nohandler'
+};
+
 /**
  * route 添加
  *
@@ -15,32 +25,31 @@ module.exports = function(app,loc){
 	var LoginUser = app.set('model_LoginUser');
 	var Admins = app.set('model_Admins');
 
-	//api逻辑，可以重新加载
-	fs.watch(__dirname+'/api',function(fw,file){
-		
-	});
 	
 
 
+
+
 	app.get(loc + '/api',function(req, res) {
-		res.send(200,'restrict access')
+		res.send(200,{s:es.restrict})
 	});
+
 
 	//api
 	app.post(loc +'/api', function(req, res) {
 		var m = req.query.m
 		if(!m)
 			m = req.body.m
-		auth.cidAuth(req,null,function(err){
-			if(err){
-				res.json({s:'auth',redirect:''})
-			}else{
-				//
-				res.json({s:'OK',redirect:''})
-			}
-		})
+		if(!m){
+			res.send(200,{s:es.nomethod,m:m})
+		}
+		var mcb = apiloader.get(m);
+		if(!mcb){
+			res.send(200,{s:es.nohandler,m:m})
+			return;
+		}
+		mcb(req,res);
 
 	});
-
 
 }

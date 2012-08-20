@@ -1,0 +1,1 @@
+ var F = module.exports=function(app){ 		app.set('F',3);  } 	

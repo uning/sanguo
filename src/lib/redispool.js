@@ -70,10 +70,10 @@ RedisPool.prototype._createClient = function(rcc) {
 
 	});
 	rc.on('end',function(err){
-		self.log.debug("Redis end:",rcc , err);
+		self.log.debug("Redis end:",rcc );
 	})
 	rc.on('ready',function(err){
-		self.log.debug("Redis ready:",rcc , err);
+		self.log.debug("Redis ready:",rcc );
 	})
 
 

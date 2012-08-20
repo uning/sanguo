@@ -10,7 +10,7 @@ var chatsio  = module.exports = function(app,loc){
 	var LoginUser = app.set('model_LoginUser');
 	var uor = require('./useronline.registry') //用户列表 
 	var sio =  require('socket.io').listen(app.set('myserver'));
-	sio.log = app.set('mylog');
+	var log = sio.log = app.set('mylog');
 
 	//confiure socket io
 	//https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO

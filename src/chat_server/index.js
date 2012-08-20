@@ -2,7 +2,7 @@
 var libdir = '../lib/'
 var s = require(libdir + 'configservice.js')
 ,comm = require(s.WORKROOT + '/src/common.js')
-,express = require('express')
+,express = require('../lib/myexpress')
 ,log = comm.getLogger(s.bootconfig.role)
 
 /*
@@ -28,8 +28,12 @@ require('../appconf/auth')(app);
 
 
 
-//*
 // require routes
+var RL = require('../appconf/routeloader.js')
+var rloader =  new RL(app,'',__dirname + '/routes')
+rloader.loadAll();
+
+/*
 require('./routes/chat')(app);
 require('./routes/user')(app);
 require('./routes/help')(app);
