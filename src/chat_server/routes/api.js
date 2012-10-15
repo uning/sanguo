@@ -1,15 +1,4 @@
 
-var ID = require('../../lib/sessionid.js');
-var fs = require('fs');
-var Apiloader = require('../appconf/apiloader.js');
-var apiloader = new Apiloader(__dirname +'/api');
-
-var es = {
-	restrict:'restrict'
-	,nomethod:'nomethod'
-	,noparam:'noparam'
-	,nohandler:'nohandler'
-};
 
 /**
  * route 添加
@@ -18,6 +7,19 @@ var es = {
  * @param loc {String} 挂载位置,默认为空
 */
 module.exports = function(app,loc){
+	var ID = require(app.CONFIG.WORKROOT+'/src/lib/sessionid.js');
+	var fs = require('fs');
+	var Apiloader = require(app.CONFIG.WORKROOT + '/src/appconf/apiloader.js');
+
+	//
+	var apiloader = new Apiloader(__dirname +'/api');
+
+	var es = {
+		restrict:'restrict'
+		,nomethod:'nomethod'
+		,noparam:'noparam'
+		,nohandler:'nohandler'
+	};
 	loc = loc || '';
 
 	var auth = app.set('myauth');

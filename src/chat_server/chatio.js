@@ -11,12 +11,14 @@ var chatsio  = module.exports = function(app,loc){
 	var uor = require('./useronline.registry') //用户列表 
 	var sio =  require('socket.io').listen(app.set('myserver'));
 	var log = sio.log = app.set('mylog');
+	var s = app.CONFIG;
 
 	//confiure socket io
 	//https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
 
 	sio.configure(function(){
 		sio.enable('browser client etag');
+		sio.disable('browser client cache');
 		sio.set('transports', [
 				'websocket'
 				, 'flashsocket'
@@ -24,7 +26,9 @@ var chatsio  = module.exports = function(app,loc){
 				, 'xhr-polling'
 				, 'jsonp-polling'
 		]);
-		//sio.set('heartbeat timeout',s.get('heartbeat timeout',30));
+		if(!s.get('heartbeats',false))
+			sio.disable('heartbeats');
+		//sio.set('heartbeats',s.get('heartbeats',false));
 		//sio.set('heartbeat interval',s.get('heartbeat interval',40));
 	});
 
@@ -57,26 +61,13 @@ var chatsio  = module.exports = function(app,loc){
 				});
 			});
 
-/*
-		 findDatabyIP(handshake.address.address, function (err, data) {
-			 if (err) return callback(err);
-
-			 if (data.authorized) {
-				 handshake.foo = 'bar';
-				 for(var prop in data) handshake[prop] = data[prop];
-				 callback(null, true);
-			 } else {
-				 callback(null, false);
-			 }
-		 })
-*/
 		})
 	});
 
-/**
- * 处理聊天逻辑
- *
-*/
+  /**
+   * 处理聊天逻辑
+   *
+   */
 	sio.sockets.on('connection', function(socket) {
 		if(!socket.handshake){
 			log.warn('no handleshake')
@@ -102,6 +93,16 @@ var chatsio  = module.exports = function(app,loc){
 		user.login();//表示长连接成功
 
 
+
+		/**测试消息
+		socket.send('msg:socket.send("xxx")');
+		//socket.send({msg:'msg:socket.send(json)'});
+		socket.emit('event str','string message');
+		socket.emit('event 2str','string message','string 2');
+
+		socket.emit('event json',{a:1});
+		socket.emit('event json2',{a:1},{b:1});
+		//*/
 
 		//加载处理器
 		//socket.emit('eventnme',param) 产生事件
@@ -149,6 +150,7 @@ var chatsio  = module.exports = function(app,loc){
 					return;
 				}
 			}
+
 			//socket.broadcast.send(m);//just
 /*
 	### *消息定义*
@@ -163,11 +165,10 @@ var chatsio  = module.exports = function(app,loc){
 			//socket.emit('message',omsg)
 			switch (msg.t) {
 				case 1:
-					case 3:
-					case 4:
-					//
+				case 3:
+				case 4:
 					socket.broadcast.emit('message',omsg)
-				break;
+				    break;
 				case 2: // 公会聊天
 					break;
 				default: //玩家一对一或1对多聊天
@@ -191,16 +192,13 @@ var chatsio  = module.exports = function(app,loc){
 		});
 
 		socket.on('disconnect', function(c) {
-			//uor.removeUser(socket.handshake.userid);
 			log.info('disconnect:',c,socket.handshake.user.id)
 			var user = socket.handshake.user;
 			user.s  = 2;// offline
 			user.socket = null;
 		});
 
-
 	});
-
 	return sio;
 }
 

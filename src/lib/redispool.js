@@ -50,6 +50,11 @@ RedisPool.prototype.stringify = function(parsed) {
   });
 };
 
+/**
+ * @param dsn  string 'redis://localhost:53000' 
+ * @param options.exclusive bool 独占
+ *
+ */
 RedisPool.prototype.alloc = function(dsn, options) {
 	if(!dsn) return null;
   var parsed = this.parse(dsn);
@@ -74,6 +79,9 @@ RedisPool.prototype._createClient = function(rcc) {
 	})
 	rc.on('ready',function(err){
 		self.log.debug("Redis ready:",rcc );
+	})
+	rc.on('quit',function(err){
+		self.log.debug("Redis quit:",rcc );
 	})
 
 
@@ -113,6 +121,9 @@ RedisPool.prototype._allocInPool = function(parsedDsn, options) {
   return ref.client;
 };
 
+/**
+ * 释放
+ */
 RedisPool.prototype.free = function(client, cb) {
   if (this._freePoolClient(client)) return;
   if (this._freeExclusiveClient(client)) return;
@@ -149,7 +160,12 @@ RedisPool.prototype._freeExclusiveClient = function(client) {
   var index = this._exclusive.indexOf(client);
   if (index === -1) return false;
 
-  this._exclusive.slice(index, 1);
+  var i,total = this._exclusive.length,left = [];
+  for(i = 0; i < total; i += 1 ){
+	  if(i != index)
+		  left.push( this._exclusive[i]);
+  }
+  this._exclusive = left;
   client.quit();
   this.length--;
 

@@ -7,9 +7,12 @@ var r = module.exports = {
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
-	    ,v:120 }
+	    ,v:120
+	}
+	,heartbeats:false
 	,listenPort: 8881
 	,host: 'chat.playcrab.com'
 	,isDev: true
+	,log2console: true
 	,mefile: __filename // override by loader save use filename
 }

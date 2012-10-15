@@ -1,4 +1,4 @@
-三国项目后台
+项目后台
 ============
 
   使用mongodb，node(express,socket.io),redis实现服务器
@@ -22,4 +22,8 @@
 
 
 
+
+todo
+====
+chatio 处理器的动态加载,更好的处理器方式
 

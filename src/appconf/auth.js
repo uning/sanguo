@@ -33,7 +33,7 @@ module.exports = function(app,loc){
 			}
 
 
-			var rr	= ID.parseCid(req.cookies.cid);
+			var rr	= ID.parseCid(cid);
 			if(!rr){
 				next('cid parse error');
 				return;

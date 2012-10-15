@@ -10,6 +10,9 @@ WLoader = require '../lib/wloader.js'
 ###
 class Api extends  WLoader
 
+	#
+	# 根据方法名,返回相应的处理函数
+	#
 	get:(method)->
 		parts = method.split '.'
 		c = parts[0]

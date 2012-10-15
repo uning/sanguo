@@ -48,7 +48,8 @@ var ID = module.exports = {
 	 *
 	 */
 	genCid: function(uid,info ,tm) {
-		var cc  = uid + "_" + tm || Math.floor(new Date().getTime()/1000);
+		tm = tm  || Math.floor(new Date().getTime()/1000);
+		var cc  = uid + "_" + tm
 		if(info)
 			cc += '_' + info
 		return ID.encodeStr(cc);

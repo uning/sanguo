@@ -8,12 +8,13 @@ console.log(enc = ID.encodeStr(p),dec = ID.decodeStr(enc),p == dec);
 var cid = 'MForMDMvMTMyMS0uXm4zMDYZciwbOQ';
 var dstr = ID.decodeStr(cid)
 ,ret = dstr.split('_',3)
+console.log(ret,enc = ID.genCid(1,'s1'),dec = ID.parseCid(enc))
 
 //console.log(dstr,ret,ID.parseCid(cid));
 
 
 
-
+if(0)
 describe('sessionid', function() {
     it('encInt decInt 应该相等', function() {
         var i = 1334915270 ,ei = ID.encInt(i)

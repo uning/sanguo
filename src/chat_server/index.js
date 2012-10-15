@@ -21,6 +21,7 @@ app.set('myserver',server);
 app.set('mylog',log);
 
 app.MYDIR = __dirname;
+app.CONFIG = s;
 app.enable('loginhelper');//加载loginheler
 require('../appconf/server')(app,express,s,comm);
 require('../appconf/auth')(app);
@@ -32,13 +33,6 @@ require('../appconf/auth')(app);
 var RL = require('../appconf/routeloader.js')
 var rloader =  new RL(app,'',__dirname + '/routes')
 rloader.loadAll();
-
-/*
-require('./routes/chat')(app);
-require('./routes/user')(app);
-require('./routes/help')(app);
-require('./routes/admin')(app);
-//*/
 
 
 //聊天逻辑

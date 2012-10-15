@@ -56,6 +56,7 @@ ChatUser.prototype.init = function(){
 	else{
 		id = parseInt(id) ; //toint 
 	}
+
 	/*获取名字及好友列表
 	LoginUser.findById(id,function(err,user){
 		if(user){
@@ -76,6 +77,7 @@ ChatUser.prototype.init = function(){
 ChatUser.prototype.getRecentMsgs = function(callback){
 	var mid = 'msg:'+ this.id
 	var old = new Date().getTime() - 86400*1000*1;
+
 	rc.lrange(mid,0,-1,function(err,res){
 		log.debug(mid ,' recent msg from redis:',res,err);
 		if(err){
@@ -152,10 +154,13 @@ var uor = {
 	_currentGroups: {}, //群
 	_banUsers:{},
 
+	siosock:null, //可以当成sio socket 来用的
+
+
 	/** 
 	 * 初始化封禁用户列表等
 	 *
-*/
+     */
 	init:function(){
 
 	},
@@ -164,7 +169,7 @@ var uor = {
   /**
    * 用户连接聊天服务器时时调用
    * 记录用户登录时间
-*/
+  */
 	addUser: function(userid,username,state,socket) {
 		user = this._currentUsers[userid] || new ChatUser()
 		user.n = username;
@@ -201,7 +206,7 @@ var uor = {
 		var uo = new ChatUser();
 		uo.id = touid;
 		uo.tome(msg);
-		log.warn('offlineMsg: to ',uid,' from ',msg._fid)
+		//log.warn('offlineMsg: to ',uid,' from ',msg._fid)
 
 	},
 

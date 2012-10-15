@@ -29,7 +29,7 @@ var get = exports.get = function(name,opts){
 		]
 		,exitOnError:false
 	}
-	if(opts.console !== false)
+	if(opts.console == true)
 		p.transports.push(tconsole)
 	return loggers[name] = new (winston.Logger)(p)
 

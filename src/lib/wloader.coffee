@@ -1,10 +1,12 @@
 fs = require("fs")
 path = require("path")
 
-##
+#
+#
 # watch loader (do require when file changed)
+# 
 # @param fdir 监控load文件所在路径
-##
+#
 class WLoader
 	constructor:(fdir, log, nowatch,noautoload) ->
 		@_loadedfiles = {}
@@ -30,7 +32,10 @@ class WLoader
 
 
 
-
+#
+#加载文件
+#@param 文件名
+#
 WLoader::doLoad = (f) ->
   _loadedfiles = @_loadedfiles
   log = @_log
@@ -52,7 +57,11 @@ WLoader::doLoad = (f) ->
       log.error "WLoader load for  file " + f + ": require return null"
     #log.info  fs.readFileSync(f,'utf8')
     ncc
-
+#
+#重新加载文件
+#
+#@param rf  相对目录的文件名
+#
 WLoader::load = (rf) ->
   f = path.normalize(@_fdir + '/' + rf)
   _loadedfiles = @_loadedfiles

@@ -5,17 +5,28 @@ var fs = require('fs')
 ,mongoose = require('mongoose')
 ,util = require('util')
 ,RedisPool = require("./lib/redispool.js")
-,Logger = require("./lib/logger")
 ,s = require("./lib/configservice.js")
 ,WORKROOT =  path.resolve(__dirname + '/../');
-//,Logger = require("./lib/winston_logger")
 
 
 var getLogger = exports.getLogger = function(name,opts){
+	var Logger;
+	if(s.get('logger','') == ''){
+		Logger = require("./lib/logger")
+	}else{
+	    Logger = require("./lib/winston_logger")
+	}
+	opts = opts || {};
+	if(s.get('log2console',true)){
+		opts.console = true;
+	}
 	return Logger.get(name,opts)
 }
 
 var getRedis = exports.getRedis = function(uri,opts){
+	//初始化log
+	var log = getLogger()
+	,redispool = new RedisPool({log:log})
 	return redispool.alloc(uri,opts)
 }
 
@@ -34,8 +45,5 @@ exports.getFileLogid = function(file){
     return path.relative(WORKROOT,file)
 }
 
-//初始化log
-var log = exports.getLogger()
-,redispool = new RedisPool({log:log})
 
 
