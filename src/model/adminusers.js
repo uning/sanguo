@@ -56,5 +56,4 @@ module.exports ={
 	"adventure_report@playcrab.com":{name:"我的冒险 数据"},
 	"wuxia@playcrab.com":{name:"武侠项目"},
 	"op@playcrab.com":{name:"运营组"}
-	
 }

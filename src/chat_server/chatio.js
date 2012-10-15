@@ -26,6 +26,7 @@ var chatsio  = module.exports = function(app,loc){
 				, 'xhr-polling'
 				, 'jsonp-polling'
 		]);
+		sio.set('log level',s.get('loglevel',3));
 		if(!s.get('heartbeats',false))
 			sio.disable('heartbeats');
 		//sio.set('heartbeats',s.get('heartbeats',false));
@@ -47,11 +48,12 @@ var chatsio  = module.exports = function(app,loc){
 			cookieParser(handshake,null,function(){
 				var u,uname
 				log.info('handshake address',handshake.address);
-				auth.sessionAuth(handshake,null,function(){
-					if(handshake.currentUser){
-						u = handshake.currentUser.id;
+				auth.cidAuth(handshake,null,function(){
+					var authinfo = handshake._auth;
+					if(handshake._auth){
+						u = authinfo.uid;
 						next(null, true);
-						uname = handshake.currentUser.name || handshake.currentUser.email
+						uname = authinfo.name || 'user' + authinfo.uid
 						handshake.user = uor.addUser(u,uname)
 						log.debug('cookie handshake ok ',handshake.user.id)
 					}else{

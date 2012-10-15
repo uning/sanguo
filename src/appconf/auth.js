@@ -42,6 +42,7 @@ module.exports = function(app,loc){
 			req._auth.uid = rr[0] //用户登录id
 			req._auth.lt  = rr[1]   //登录时间
 			req._auth.sec = rr[2] //用户登录分区 
+			req._auth.name =  req.query.name ;
 			next()
 		}
 
@@ -65,6 +66,8 @@ module.exports = function(app,loc){
 								req.session = req.session || {};
 								req.session.currentUser = user;
 								req.currentUser = user;
+								
+
 								log.debug('auth pass cid');
 								next();
 							} else {

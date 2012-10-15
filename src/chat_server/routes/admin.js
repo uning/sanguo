@@ -28,7 +28,7 @@ module.exports = function(app,loc){
 	})
 
 
-	// login form route
+	//login form route
 	app.get(loc + '/admin/banusers',auth.loadUser,function(req, res) {
 		res.render('admin/banusers', {
 			user: req.currentUser

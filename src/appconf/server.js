@@ -44,6 +44,8 @@ module.exports = function(app,express,s,comm){
 	  app.use(stylus.middleware(
 		  { src: app.MYDIR + '/stylus', dest: s.WORKROOT + compiledDir , compile: compile }
 	  ));
+
+
 	  app.use(express.bodyParser());
 	  app.use(express.cookieParser());
 

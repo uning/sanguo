@@ -14,6 +14,9 @@ module.exports = function(app,loc){
 	var LoginUser = app.set('model_LoginUser');
 	var Admins = app.set('model_Admins');
 
+	app.get(loc + '/axx',function(req, res) {
+		res.send('get axx');
+	});
 	// login form route
 	app.get(loc + '/',function(req, res) {
 		auth.sessionAuth(req,null,function(){

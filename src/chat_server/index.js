@@ -23,6 +23,7 @@ app.set('mylog',log);
 app.MYDIR = __dirname;
 app.CONFIG = s;
 app.enable('loginhelper');//加载loginheler
+
 require('../appconf/server')(app,express,s,comm);
 require('../appconf/auth')(app);
 
