@@ -3,13 +3,14 @@ var r = module.exports = {
 	,confserver: 'mongodb://127.0.0.1:35050/jsanguo'
 	,sessionRedis: 'redis://localhost:53000'
 	,userMongo: 'mongodb://127.0.0.1:35050/jsanguo'
-	,chatRedis: 'redis://localhost:53000'
+	,chatRedis: 'redis://localhost:53002'
+	,sec:'s3'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
 	    ,v:120
 	}
-	,heartbeats:false
+	,heartbeats:400
 	,listenPort: 8881
 	,host: 'chat.playcrab.com'
 	,isDev: true

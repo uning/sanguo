@@ -26,8 +26,12 @@ var json = require('commonjs-utils/lib/json-ext')
 ,base64 = require('commonjs-utils/lib/base64')
 
 
+//发消息到聊天服务器的连接
 var  rc ;//redis client
-var  server;
+
+//服务器表示，分区，string
+var server,sec;
+
 
 var log = comm.getLogger(s.bootconfig.role); 
 
@@ -36,14 +40,6 @@ ChatUser = function(){
 	this._rmsgs = []
 }
 
-
-/**
- *
- *
- */
-function getRedis(u){
-
-}
 
 
 /**
@@ -75,7 +71,7 @@ ChatUser.prototype.init = function(){
 }
 
 ChatUser.prototype.getRecentMsgs = function(callback){
-	var mid = 'msg:'+ this.id
+	var mid = 'msg:' + sec + ':'+ this.id
 	var old = new Date().getTime() - 86400*1000*1;
 
 	rc.lrange(mid,0,-1,function(err,res){
@@ -86,9 +82,11 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 		}else{
 			var rmsgs = [],mo
 			for(var i = 0; i < res.length || i > 20; i++ ){
+				try{
 				mo = json.parse(res[i]);
-				if(mo._t  > old)
+				if(mo && mo._t  > old)
 					rmsgs.push(mo);
+				}catch(e){}
 			}
 			callback(null,rmsgs);
 		}
@@ -99,13 +97,16 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 * 向redis 服务器注册
 */
 ChatUser.prototype.login = function(){
+
+	return;
 	var mid = 'msg:'+ this.id
 	,multi = rc.multi()
 	,a
 	,rmsgs = this._rmsgs
-	,i
+	,i;
+
 	multi
-	.sadd(server + ':onlineusers',this.id)
+	.sadd(server +":" + sec + ':onlineusers',this.id)
 	.hset('user2server',this.id,server)
 	.set('info:'+this.id,json.stringify({lastseen:this.lastseen,server: server,systime:this.systime}))
 	.exec(function(err,r){
@@ -123,13 +124,16 @@ ChatUser.prototype.tome = function(msg){
 	var strmsg = msg,rmsgs = this._rmsgs
 	if(this.socket){
 		this.socket.emit('message',msg)
+		return; //wether to save history
 		rmsgs.push(msg);
-		if(rmsgs.length > 100){
+		if(rmsgs.length > 50){
 			rmsgs.pop();
 		}
-		return; //wether to save history
 	}
-	var mid = 'msg:'+ this.id,multi = rc.multi()
+
+	//离线消息
+	var mid = 'msg:' + sec + ':'+ this.id;
+	var multi = rc.multi();
 	if('string' !== typeof msg)
 		strmsg = json.stringify(msg);
 	multi
@@ -154,7 +158,7 @@ var uor = {
 	_currentGroups: {}, //群
 	_banUsers:{},
 
-	siosock:null, //可以当成sio socket 来用的
+	siosock:null, //广播时候用
 
 
 	/** 
@@ -287,20 +291,85 @@ var uor = {
 		if (userid in this._currentUsers) {
 			this._currentUsers[groupid][userid] = 1;
 		}
-	},
+	}
 
+
+	/**
+	 * 处理消息
+	 */
+	,processMessage:function(msg,socket){
+		msg.t = msg.t || 0;
+		msg._t = new Date().getTime();
+		socket = socket || uor.siosock;
+		if(!socket){
+			log.warn('uor not have socket discard msg:' ,msg);
+			return
+		}
+		//socket.emit('message',msg)
+		switch (msg.t) {
+			case 1:
+			case 3:
+			case 4:
+				socket.broadcast.emit('message',msg);
+			    break;
+			case 2: //todo 公会聊天
+				break;
+			default: //玩家一对一或1对多聊天
+				var toids = msg.to,touser
+			if('all' === toids){
+				msg.t = 1;
+				socket.broadcast.emit('message',msg)
+			}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
+				touser = uor.getUser(toids);
+				touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 
+			}else if(typeof toids === typeof []){
+				var unum = toids.length
+				for(var i = 0 ;i < unum ; i ++){
+					touser = uor.getUser(toids[i]);
+					touser && touser.tome(msg) || uor.offlineMsg(toids[i],msg);
+				}
+			}else{
+				log.warn('no `to` ignore',msg._fid);
+			}
+		}
+	}
 	/**
 	 * 
 	 *  启动清理，连接redis
 	 *
      */
-	start:function(app){
+	,start:function(app){
 		var clearTimeOutUser = s.bootconfig['clearTimeOutUser'] && s.bootconfig['clearTimeOutUser'].v  || 60 ;//清除用户周期
 		rc = comm.getRedis(s.get('chatRedis'))
-		server = app.set('host')
+
+		
+		//初始化server，sec
+		server = s.get('host')
+		sec = s.get('sec');
 		app.set('model_Uor',uor)
 		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
+
+
+		//订阅游戏服务器的 sec + ':realtime' 的消息
+		var wrc  = comm.getRedis(s.get('chatRedis'),{exclusive:1});
+		var chname = sec + ':realtime';
+		wrc.on('ready',function(){
+			log.info('watch chname:',chname);
+			wrc.subscribe(chname);
+		}) 
+		//收到消息
+		wrc.on("message", function (channel, msg) {
+			log.debug('watch channel: ',channel,msg);
+			try{
+				jso = json.parse(msg);
+				if(jso){
+					uor.processMessage(jso);
+				}
+			}catch(e){
+				log.warn('discard msg : ',msg);
+			}
+		});
 	}
 };
 

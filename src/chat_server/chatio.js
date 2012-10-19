@@ -18,7 +18,6 @@ var chatsio  = module.exports = function(app,loc){
 
 	sio.configure(function(){
 		sio.enable('browser client etag');
-		sio.disable('browser client cache');
 		sio.set('transports', [
 				'websocket'
 				, 'flashsocket'
@@ -27,10 +26,14 @@ var chatsio  = module.exports = function(app,loc){
 				, 'jsonp-polling'
 		]);
 		sio.set('log level',s.get('loglevel',3));
-		if(!s.get('heartbeats',false))
-			sio.disable('heartbeats');
-		//sio.set('heartbeats',s.get('heartbeats',false));
-		//sio.set('heartbeat interval',s.get('heartbeat interval',40));
+		var timeout = s.get('heartbeats',false);
+		if(!timeout)
+			sio.set('heartbeats',false);
+		else{
+			sio.set('heartbeat interval',timeout)
+			sio.set('heartbeat timeout',2*timeout);
+			sio.set('close timeout',2*timeout + 1)
+		}
 	});
 
 
@@ -71,6 +74,7 @@ var chatsio  = module.exports = function(app,loc){
    *
    */
 	sio.sockets.on('connection', function(socket) {
+		uor.siosock = socket;
 		if(!socket.handshake){
 			log.warn('no handleshake')
 			socket.close();
@@ -162,35 +166,10 @@ var chatsio  = module.exports = function(app,loc){
 	 c:''      // 消息内容        
 	}
 */
-			msg.t = msg.t || 0;
-			var omsg = {_fid:user.id,_fn:user.n,_t:new Date().getTime(),c:msg.c,t:msg.t}
-			//socket.emit('message',omsg)
-			switch (msg.t) {
-				case 1:
-				case 3:
-				case 4:
-					socket.broadcast.emit('message',omsg)
-				    break;
-				case 2: // 公会聊天
-					break;
-				default: //玩家一对一或1对多聊天
-					var toids = msg.to,touser
-				if('all' === toids){
-					omsg.t = 1;
-					socket.broadcast.emit('message',omsg)
-				}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
-					touser = uor.getUser(toids);
-					touser && touser.tome(omsg) || uor.offlineMsg(toids,omsg) 
-				}else if(typeof toids === typeof []){
-					var unum = toids.length
-					for(var i = 0 ;i < unum ; i ++){
-						touser = uor.getUser(toids[i]);
-						touser && touser.tome(omsg) || uor.offlineMsg(toids[i],omsg);
-					}
-				}else{
-					log.warn('no `t` ignore',user.id,m);
-				}
-			}
+			msg._fid = user.id;
+			msg._fn = user.n;
+			uor.processMessage(msg,socket);
+
 		});
 
 		socket.on('disconnect', function(c) {

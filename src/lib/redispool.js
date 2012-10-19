@@ -13,6 +13,7 @@ function RedisPool(opts) {
 	if(RedisPool.singleton)
 		return RedisPool.singleton
   EventEmitter.call(this);
+  opts = opts ||{};
 
   this.length       = 0;
 
@@ -67,7 +68,6 @@ RedisPool.prototype.alloc = function(dsn, options) {
 
 RedisPool.prototype._createClient = function(rcc) {
   var rc = Redis.createClient(rcc.port, rcc.host);
-	rc = Redis.createClient(rcc.port  ,rcc.host)
 	
 	var self = this;
 	rc.on("error", function (err) {
@@ -76,6 +76,10 @@ RedisPool.prototype._createClient = function(rcc) {
 	});
 	rc.on('end',function(err){
 		self.log.debug("Redis end:",rcc );
+	})
+
+	rc.on('reconnecting',function(err){
+		self.log.warn("Redis reconnecting:",rcc );
 	})
 	rc.on('ready',function(err){
 		self.log.debug("Redis ready:",rcc );
