@@ -33,7 +33,7 @@ var  rc ;//redis client
 var server,sec;
 
 
-var log = comm.getLogger(s.bootconfig.role); 
+var log = comm.getLogger('uor'); 
 
 ChatUser = function(){
 	this._t = new Date();

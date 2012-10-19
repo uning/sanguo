@@ -10,8 +10,15 @@ var chatsio  = module.exports = function(app,loc){
 	var LoginUser = app.set('model_LoginUser');
 	var uor = require('./useronline.registry') //用户列表 
 	var sio =  require('socket.io').listen(app.set('myserver'));
-	var log = sio.log = app.set('mylog');
 	var s = app.CONFIG;
+
+	var log = sio.log = app.set('mylog');
+        sio.set('logger',log);
+
+	log.info('chatio info ');
+	log.debug('chatio debug ');
+
+	//sio.set('log level',s.get('loglevel','debug'));
 
 	//confiure socket io
 	//https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
@@ -25,7 +32,6 @@ var chatsio  = module.exports = function(app,loc){
 				, 'xhr-polling'
 				, 'jsonp-polling'
 		]);
-		sio.set('log level',s.get('loglevel',3));
 		var timeout = s.get('heartbeats',false);
 		if(!timeout)
 			sio.set('heartbeats',false);

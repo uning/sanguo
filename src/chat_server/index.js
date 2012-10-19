@@ -3,7 +3,8 @@ var libdir = '../lib/'
 var s = require(libdir + 'configservice.js')
 ,comm = require(s.WORKROOT + '/src/common.js')
 ,express = require('../lib/myexpress')
-,log = comm.getLogger(s.bootconfig.role)
+,log = comm.getLogger('main')
+
 
 /*
  *

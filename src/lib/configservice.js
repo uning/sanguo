@@ -95,8 +95,8 @@ var s = module.exports = {
 			_id: { type: String ,/* */ unique:true }
 		},{collection:'configs',strict:false});
 
-		var CONFSERVER = this.bootconfig.confserver ||process.env.CONFSERVER ||  'mongodb://127.0.0.1:35050/sanguo';
-		log.debug('getModel() ',CONFSERVER ,typeof(CONFSERVER),CONFSERVER === 'mongodb://127.0.0.1:35050/sanguo')
+		var CONFSERVER = this.bootconfig.confserver ||process.env.CONFSERVER ||  'mongodb://127.0.0.1:35050/playcrab';
+		log.debug('getModel() ',CONFSERVER ,typeof(CONFSERVER),CONFSERVER === 'mongodb://127.0.0.1:35050/playcrab')
 		this.mgserver  =  mongoose.createConnection(CONFSERVER);//只创建一次
 		return this.model = this.mgserver.model('Config',config_schema,'configs')
 		

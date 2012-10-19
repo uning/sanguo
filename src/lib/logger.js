@@ -24,7 +24,7 @@ var getLevel= function(name) {
 Logger = function(name,opts) {
   opts = opts || {};
   this.colors = false !== opts.colors;
-  this.level = getLevel(opts.level || 'debug');
+  this.lvl = getLevel(opts.level || 'debug');
   this.enabled = opts.enabled || true;
   this.name = name || opts.name ;
 
@@ -59,7 +59,7 @@ getReadableDate = function() {
 };
 
 Logger.prototype.log = function() {
-  if (this.clvl > this.level || !this.enabled) return this;
+  if (this.clvl > this.lvl || !this.enabled) return this;
   var i, l, param,index = this.clvl;
   param = [];
   if (this.colors) param.push("  \u001b[" + colors[index] + "m");
@@ -73,12 +73,14 @@ Logger.prototype.log = function() {
   }
 
   if (this.colors) param.push(" \u001b[39m");
-  /*
+  //*
   if(typeof this.name  === 'string'){
 	  //param.push(__logid);
 	  param.push(this.name);
   }
-  */
+  // param.push(this.clvl);
+  // param.push(this.lvl);
+  //*/
   console.log.apply(console, param);
   return this;
 };
