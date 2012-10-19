@@ -12,18 +12,28 @@ exports.get = function(name,opts) {
   return loggers[name] = new Logger(name,opts);
 };
 
+var getLevel= function(name) {
+	var i = 0;
+	for( ; i < levels.length; i++){
+		if(levels[i] == name)
+			return i
+	}
+	return i;
+};
+
 Logger = function(name,opts) {
   opts = opts || {};
   this.colors = false !== opts.colors;
-  this.level = opts.level || 3;
+  this.level = getLevel(opts.level || 'debug');
   this.enabled = opts.enabled || true;
   this.name = name || opts.name ;
+
+  //console.log('new logger level:',this,opts);
   return this.wdate = opts.wdate || false;
 };
 
 levels = ["error", "warn", "info", "debug"];
 
-var level2int = {};
 
 padlevels = [];
 
@@ -76,7 +86,6 @@ Logger.prototype.log = function() {
 max = 0;
 
 levels.forEach(function(name, k) {
-  //level2int[name] = k;
   max = Math.max(max, name.length);
   return Logger.prototype[name] = function() {
     this.clvl = k;

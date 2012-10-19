@@ -18,7 +18,7 @@ var fs = require('fs')
 ,util = require('util')
 ,path = require('path')
 ,mongoose=require('mongoose')
-,log = require('./logger.js').get()
+,log = require('./logger.js').get('configservice')
 
 const WORKROOT = path.resolve(__dirname + '/../../');
 //log.name = path.basename(__filename)

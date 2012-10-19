@@ -12,7 +12,7 @@ var app = module.exports  = express()
 
 
 //数据库model
-app.set('model_LoginUser',require('../model/loginuser.js').get(comm.getMongoose(s.get('userMongo'))));
+app.set('model_LoginUser',require('../model/loginuser.js').get(comm.getMongoose(s.get('userMongo'),'userlogin')));
 app.set('model_Admins' , require('../model/adminusers.js'));
 
 //create server object

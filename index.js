@@ -5,9 +5,9 @@
 
 var s = require('./src/lib/configservice.js')
 ,comm = require('./src/common.js')
-,log = comm.getLogger()
 ,fs = require('fs')
 ,path = require('path')
+,log
 
 var usage = function(err){
 	if(typeof err === 'string')
@@ -35,6 +35,7 @@ var run = function(err){
    //根据不同配置，加载不同模块
 	usage(err);
 	var ser= s.bootconfig.role.split('.')[0];
+        log = comm.getLogger()
 	log.info('run as ',ser)
 	///*
 	var server =  require ('./src/'+ser);

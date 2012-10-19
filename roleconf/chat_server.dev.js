@@ -15,5 +15,6 @@ var r = module.exports = {
 	,host: 'chat.playcrab.com'
 	,isDev: true
 	,log2console: true
+	,log_level:'debug'
 	,mefile: __filename // override by loader save use filename
 }

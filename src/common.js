@@ -20,6 +20,7 @@ var getLogger = exports.getLogger = function(name,opts){
 	if(s.get('log2console',true)){
 		opts.console = true;
 	}
+        opts.level=s.get('loglevel','debug');
 	return Logger.get(name,opts)
 }
 
