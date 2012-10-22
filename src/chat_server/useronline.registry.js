@@ -375,7 +375,7 @@ var uor = {
 			smongo = null;
 
 		}else{
-			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),'msgs'));
+			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),sec + '_msgs'));
 		}
 
 
