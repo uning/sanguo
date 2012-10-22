@@ -102,7 +102,7 @@ var chatsio  = module.exports = function(app,loc){
 
 		//处理系统通知
 		// socket.broadcast.emit('login', { n: user.n,id:user.id});
-		user.login();//表示长连接成功
+		// user.login();//表示长连接成功
 
 
 
@@ -134,7 +134,8 @@ var chatsio  = module.exports = function(app,loc){
 			}
 
 		});
-		//最近消息
+
+		//离线最近消息
 		socket.on('recentm', function(m, c) {
 			var user = socket.handshake.user;
 			var callb = function(err,data){
@@ -146,6 +147,11 @@ var chatsio  = module.exports = function(app,loc){
 				}
 			}
 			user.getRecentMsgs(callb)
+		});
+
+		//最近广播的消息
+		socket.on('brecentm', function(m, c) {
+			socket.emit('brecentm',{msgs:uor.getAllRecentMsgs()})
 		});
 
 		socket.on('message', function(m, c) {

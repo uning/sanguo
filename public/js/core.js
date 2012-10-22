@@ -1,3 +1,4 @@
+var _sio ;
 (function() {
 	function toggleMessageBox(state) {
 		var el = $('.chat-message');
@@ -61,6 +62,7 @@
 			// set connection state
 			message('System','Connecting to chat server...');
 			socket = io.connect()
+			_sio = socket;
 			socket.on('reconnect', function (e) {
 				//$('#chat-messages').remove();
 				message('System', 'Reconnected to the server');
@@ -82,6 +84,13 @@
 			socket.on('offline', function (e) {
 				message('server-offline',  JSON.stringify(e));
 				console.log(e)
+			});
+
+			socket.on('recentm', function (e) {
+				console.log('event ', 'recentm',e)
+			});
+			socket.on('brecentm', function (e) {
+				console.log('event ', 'brecentm',e)
 			});
 
 			socket.on('connect', function(){

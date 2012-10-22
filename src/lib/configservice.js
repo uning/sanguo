@@ -1,10 +1,13 @@
-/*
+
+/**
  配置
- 所有配置文件以代码方式维护
+
+ 所有配置文件以代码方式维护,支持从本地配置文件或mongodb里获取
  包含一个 
   mefile      -- 文件名
   confserver  -- 存储配置的monodb
 
+  接口说明
   l -- local
   n -- network
   lsave file -- 储存到本地文件
@@ -95,7 +98,7 @@ var s = module.exports = {
 			_id: { type: String ,/* */ unique:true }
 		},{collection:'configs',strict:false});
 
-		var CONFSERVER = this.bootconfig.confserver ||process.env.CONFSERVER ||  'mongodb://127.0.0.1:35050/playcrab';
+		var CONFSERVER = this.bootconfig.confserver || process.env.CONFSERVER ||  'mongodb://127.0.0.1:35050/playcrab';
 		log.debug('getModel() ',CONFSERVER ,typeof(CONFSERVER),CONFSERVER === 'mongodb://127.0.0.1:35050/playcrab')
 		this.mgserver  =  mongoose.createConnection(CONFSERVER);//只创建一次
 		return this.model = this.mgserver.model('Config',config_schema,'configs')
@@ -103,7 +106,7 @@ var s = module.exports = {
 	}
 
   /**
-   *  把配置保存到文件 
+   * 把配置保存到文件 
    * @param {Object} confo 
    * @return 
    * @api public
@@ -175,7 +178,7 @@ var s = module.exports = {
 				return;
 			}
 		}
-		var key = (this.bootconfig.role || name )   + ':' + name; 
+		var key = (this.bootconfig.role || name ) ;//  + ':' + name; 
 		var m = this.getModel()
 		m.findOne({_id:key},function(err,o){
 			if(err){
@@ -211,7 +214,7 @@ var s = module.exports = {
 				return;
 			}
 		}
-		var key = this.bootconfig.role + ':' + confo.role; 
+		var key = this.bootconfig.role ;//+ ':' + confo.role; 
 		var m = this.getModel()
 		confo['_id'] = key;
 		m.collection.save(confo,function(err){
