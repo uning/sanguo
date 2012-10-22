@@ -20,6 +20,7 @@
 var libdir = '../lib/'
 ,s = require(libdir + 'configservice.js')
 ,comm = require(s.WORKROOT + '/src/common.js')
+,LL  = require( libdir + 'linkedlist.js')
 
 
 var json = require('commonjs-utils/lib/json-ext')
@@ -29,8 +30,11 @@ var json = require('commonjs-utils/lib/json-ext')
 //发消息到聊天服务器的连接
 var  rc ;//redis client
 
+
+var smongo  ; //存消息的mongodb
+
 //服务器表示，分区，string
-var server,sec;
+var server,sec,llnum;
 
 
 var log = comm.getLogger('uor'); 
@@ -160,7 +164,19 @@ var uor = {
 
 	siosock:null, //广播时候用
 
+	_rmsgs:new LL, //最近消息
 
+
+	addRecentMsg:function(m){
+		var ll = this._rmsgs;
+		ll.rpush(m);
+		if(ll.size() > llnum){
+			ll.lpop();
+		}
+	},
+	getAllRecentMsgs:function(){
+		return this._rmsgs.toArray();
+	},
 	/** 
 	 * 初始化封禁用户列表等
 	 *
@@ -305,12 +321,14 @@ var uor = {
 			log.warn('uor not have socket discard msg:' ,msg);
 			return
 		}
+		smongo.collection.save(msg);
 		//socket.emit('message',msg)
 		switch (msg.t) {
 			case 1:
 			case 3:
 			case 4:
 				socket.broadcast.emit('message',msg);
+			    uor.addRecentMsg(msg);
 			    break;
 			case 2: //todo 公会聊天
 				break;
@@ -319,6 +337,7 @@ var uor = {
 			if('all' === toids){
 				msg.t = 1;
 				socket.broadcast.emit('message',msg)
+			    uor.addRecentMsg(msg);
 			}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
 				touser = uor.getUser(toids);
 				touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 
@@ -346,9 +365,13 @@ var uor = {
 		//初始化server，sec
 		server = s.get('host')
 		sec = s.get('sec');
+		llnum = s.get('llnum',10);
 		app.set('model_Uor',uor)
 		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
+
+
+		smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),'msgs'));
 
 
 		//订阅游戏服务器的 sec + ':realtime' 的消息

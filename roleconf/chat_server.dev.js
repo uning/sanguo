@@ -3,6 +3,7 @@ var r = module.exports = {
 	,confserver: 'mongodb://127.0.0.1:35050/jsanguo'
 	,sessionRedis: 'redis://localhost:53000'
 	,userMongo: 'mongodb://127.0.0.1:35050/jsanguo'
+	,msgMongo:'mongodb://127.0.0.1:35050/chatmsg'
 	,chatRedis: 'redis://localhost:53002'
 	,sec:'s3'
 	
