@@ -321,7 +321,7 @@ var uor = {
 			log.warn('uor not have socket discard msg:' ,msg);
 			return
 		}
-		smongo.collection.save(msg);
+		smongo && smongo.collection.save(msg);
 		//socket.emit('message',msg)
 		switch (msg.t) {
 			case 1:
@@ -371,7 +371,12 @@ var uor = {
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
 
 
-		smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),'msgs'));
+		if(s.get('msgMongo',null) == null ){
+			smongo = null;
+
+		}else{
+			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),'msgs'));
+		}
 
 
 		//订阅游戏服务器的 sec + ':realtime' 的消息
