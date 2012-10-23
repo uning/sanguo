@@ -106,6 +106,7 @@ module.exports = function(app,loc){
 						});
 					}else{
 						req.session.currentUser = uo;
+						uo.name = 'GM';
 						req.flash('info', 'Registration successful');
 						res.cookie('cid',ID.genCid(id,'s1'), { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
 						res.redirect(loc + '/');
