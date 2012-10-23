@@ -2,8 +2,17 @@
 var LL  = require('../lib/linkedlist.js')
 ,should = require('should')
 
-/*
+//*
 var l = new LL;
+for(var i = 0 ; i < 20; i++){
+	l.rpush(i);
+	if(l.size() > 10){
+		l.lpop();
+	}
+	console.log(l.toArray());
+
+}
+l = new LL;
 		var items = ['first','second'];
 		should.not.exist(l.at(0))
 		l.rpush(items[0]);
