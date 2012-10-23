@@ -67,7 +67,6 @@ module.exports = function(app,loc){
 								req.session.currentUser = user;
 								req.currentUser = user;
 								
-
 								log.debug('auth pass cid');
 								next();
 							} else {
