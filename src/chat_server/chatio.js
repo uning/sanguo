@@ -15,8 +15,6 @@ var chatsio  = module.exports = function(app,loc){
 	var log = sio.log = app.set('mylog');
         sio.set('logger',log);
 
-	log.info('chatio info ');
-	log.debug('chatio debug ');
 
 	//sio.set('log level',s.get('loglevel','debug'));
 
@@ -62,7 +60,7 @@ var chatsio  = module.exports = function(app,loc){
 					if(handshake._auth){
 						u = authinfo.uid;
 						next(null, true);
-						uname = authinfo.name || 'user' + authinfo.uid
+						uname = authinfo.name || 'GM-' + authinfo.uid
 						handshake.user = uor.addUser(u,uname)
 						log.debug('cookie handshake ok ',handshake.user.id)
 					}else{
