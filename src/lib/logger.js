@@ -29,7 +29,7 @@ Logger = function(name,opts) {
   this.name = name || opts.name ;
 
   //console.log('new logger level:',this,opts);
-  return this.wdate = opts.wdate || false;
+  return this.wdate =  'wdate' in  opts  ? opts.wdate : true;
 };
 
 levels = ["error", "warn", "info", "debug"];
