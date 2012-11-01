@@ -6,7 +6,7 @@ var r = module.exports = {
 	,sessionRedis: 'redis://122.11.61.27:53000'
 	,chatRedis: 'redis://122.11.61.26:53005'
 	,msgMongo:'mongodb://122.11.61.27:35070/chatmsg'
-	,sec:'s92'
+	,sec:'s93'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
@@ -14,7 +14,7 @@ var r = module.exports = {
 	}
 	,heartbeats:400
 	,listenPort: 8092
-	,host: 's92.dzm.playcrab.com'
+	,host: 's93.dzm.playcrab.com'
 	,isDev: false
 	,log2console: true
 	,loglevel:'info'
