@@ -12,8 +12,8 @@ var r = module.exports = {
 	    ,v:120
 	}
 	,heartbeats:400
-	,listenPort: 8008
-	,host: 's8.dzm.gamecomb.com'
+	,listenPort: 8009
+	,host: 's9.dzm.gamecomb.com'
 	,isDev: false
 	,log2console: true
 	,loglevel:'info'
