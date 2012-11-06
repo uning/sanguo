@@ -4,8 +4,8 @@ var r = module.exports = {
 	,userMongo: 'mongodb://122.11.61.28:35050/chatserver'
 	,sessionRedis: 'redis://10.200.77.180:53000'
 	,chatRedis: 'redis://10.200.77.180:53005'
-	,msgMongo:'mongodb://10.200.77.181:35070/chatmsg'
-	,sec:'s8'
+	,msgMongo:'mongodb://10.200.31.72:35080/chatmsg'
+	,sec:'s9'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'

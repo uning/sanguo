@@ -5,15 +5,15 @@ var r = module.exports = {
 	,sessionRedis: 'redis://10.200.77.180:53000'
 	,chatRedis: 'redis://10.200.77.180:53005'
 	,msgMongo:'mongodb://10.200.31.72:35080/chatmsg'
-	,sec:'s8'
+	,sec:'s10'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
 	    ,v:120
 	}
 	,heartbeats:400
-	,listenPort: 8008
-	,host: 's8.dzm.gamecomb.com'
+	,listenPort: 8010
+	,host: 's10.dzm.gamecomb.com'
 	,isDev: false
 	,log2console: true
 	,loglevel:'info'
