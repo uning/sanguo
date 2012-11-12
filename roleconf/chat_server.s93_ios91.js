@@ -13,7 +13,7 @@ var r = module.exports = {
 	    ,v:120
 	}
 	,heartbeats:400
-	,listenPort: 8092
+	,listenPort: 8093
 	,host: 's93.dzm.playcrab.com'
 	,isDev: false
 	,log2console: true
