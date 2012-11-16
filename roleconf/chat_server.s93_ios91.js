@@ -2,18 +2,19 @@ var r = module.exports = {
 	 role: 'chat_server' // override by loader save from filename 
 	,confserver: 'mongodb://122.11.61.28:35050/nodeconfig'
 	,userMongo: 'mongodb://122.11.61.28:35050/chatserver'
-	,sessionRedis: 'redis://10.200.77.180:53000'
-	,chatRedis: 'redis://10.200.77.180:53005'
-	,msgMongo:'mongodb://10.200.31.72:35080/chatmsg'
-	,sec:'s8'
+
+	,sessionRedis: 'redis://122.11.61.27:53000'
+	,chatRedis: 'redis://122.11.61.26:53005'
+	,msgMongo:'mongodb://122.11.61.27:35070/chatmsg'
+	,sec:'s93'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
 	    ,v:120
 	}
 	,heartbeats:400
-	,listenPort: 8008
-	,host: 's8.dzm.gamecomb.com'
+	,listenPort: 8093
+	,host: 's93.dzm.playcrab.com'
 	,isDev: false
 	,log2console: true
 	,loglevel:'info'

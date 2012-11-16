@@ -1,0 +1,24 @@
+
+extendslayout
+block body
+
+ h3 在线用户列表
+
+ a(href='?from=0') 第一页
+ a(href='?from=#{to}') 下一页
+
+ - if (smongo)
+  table(border=1)
+   thead  
+       th 名字 
+       th 用户id
+       th 内容
+       th 消息类型
+       th 发送时间 
+   each uo in users
+     tr
+       td #{uo._fn}
+       td #{uo._fid}
+       td #{uo.c} 
+       td #{uo.t}
+       td #{uo._t}

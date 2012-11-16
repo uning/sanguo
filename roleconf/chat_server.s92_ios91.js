@@ -6,7 +6,7 @@ var r = module.exports = {
 	,sessionRedis: 'redis://122.11.61.27:53000'
 	,chatRedis: 'redis://122.11.61.26:53005'
 	,msgMongo:'mongodb://122.11.61.27:35070/chatmsg'
-	,sec:'s91'
+	,sec:'s92'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
