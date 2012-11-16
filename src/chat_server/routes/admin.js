@@ -16,9 +16,14 @@ module.exports = function(app,loc){
 	app.get(loc + '/admin/useronline',auth.loadUser,function(req, res) {
 		log.debug('params:',req.params); 
 		log.debug('qurery:',req.query); 
+		var start = req.query.from || 0;
+                var limit = req.query.limit || 20;
+                var to =  (+start) + (+limit);
+               
 		res.render('admin/useronline', {
 			uor: uor
-			,users: uor.getPage()
+                        ,to: to
+			,users: uor.getPage(start, to)
 			,user: req.currentUser
 		});
 	});
