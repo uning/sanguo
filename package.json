@@ -35,7 +35,7 @@
 		"nib"    : ">=0",
 		"connect-redis"    : ">=0",
 		"commonjs-utils"    : ">=0",
-                 "underscore" : ">=1.4"
+        "underscore" : ">=1.4"
 	},
 	"devDependencies" : {
 		"mocha" : ">=0.0.1"
