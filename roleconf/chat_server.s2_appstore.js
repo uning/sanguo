@@ -4,7 +4,7 @@ var r = module.exports = {
 	,userMongo: 'mongodb://122.11.61.28:35050/chatserver'
 	,sessionRedis: 'redis://10.200.13.38:53000'
 	,chatRedis: 'redis://10.200.13.38:53005'
-	,msgMongo:'mongodb://10.200.13.129:35070/chatmsg'
+	,msgMongo:'mongodb://10.135.17.173:35080/chatmsg'
 	,sec:'s2'
 	
 	,clearTimeOutUser:{
