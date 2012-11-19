@@ -34,14 +34,31 @@ module.exports = function(app,loc){
 
 
 	//login form route
-	app.get(loc + '/admin/banusers',auth.loadUser,function(req, res) {
+	app.all(loc + '/admin/banusers',auth.loadUser,function(req, res) {
+		var uid = req.query && req.query.banuid 	
+		if(!uid)
+			uid = req.body && req.body.banuid;
+		var uo = uor.getUser(uid);
+		if(uo){
+			uo.isban = uo.isban ? 0: 1;
+			msg = uid + "user.isban is " + uo.isban;
+			req.flash('error',msg);
+		}else
+			req.flash('error',"not find uid: " + uid);
 		res.render('admin/banusers', {
 			user: req.currentUser
+			,banuid:uid
 		});
 	});
 
 
 
+
+	//login form route
+	app.all(loc + '/admin/clearrmsgs',auth.loadUser,function(req, res) {
+		uor.clearrmsgs();
+		res.send('清除记录OK')
+	});
 
 
 	app.get(loc + '/admin/sysnotice',auth.loadUser,function(req, res) {
