@@ -5,6 +5,7 @@ block body
  h3 在线用户列表
 
  a(href='?from=0') 第一页
+ |
  a(href='?from=#{to}') 下一页
 
  table(border=1)
@@ -15,10 +16,15 @@ block body
       th 登录时间 
       th 最后操作时间 
   each uo,key in users
+    - var msg = '封禁'
+    - if(uo.isban)
+      msg = '解封'
+    
     tr
       td #{uo.n}
       td #{uo.id}
-      td 发消息 
+      td 
+        a(href='/admin/banusers?banuid=#{uo.id}',target='_blank') #{msg}
       td #{uo._t}
       td #{uo.lastseen}
 

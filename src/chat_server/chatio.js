@@ -102,37 +102,6 @@ var chatsio  = module.exports = function(app,loc){
 		// socket.broadcast.emit('login', { n: user.n,id:user.id});
 		// user.login();//表示长连接成功
 
-
-
-		/**测试消息
-		socket.send('msg:socket.send("xxx")');
-		//socket.send({msg:'msg:socket.send(json)'});
-		socket.emit('event str','string message');
-		socket.emit('event 2str','string message','string 2');
-
-		socket.emit('event json',{a:1});
-		socket.emit('event json2',{a:1},{b:1});
-		//*/
-
-		//加载处理器
-		//socket.emit('eventnme',param) 产生事件
-		//socket.send(message) 产生message,可以为json object 或字符串
-		socket.on('online', function(m, c) {
-			if( m && m.ids){
-				var len = m.ids.length,om = {},id,u;
-				for(var i = 0; i< len ;i++){
-					id = m.ids[i];
-					u = uor.getUser(id);
-					if(u && u.socket){
-						om[id] = 1;
-					}else
-						om[id] = 0;
-				}
-				socket.emit('online',om)
-			}
-
-		});
-
 		//离线最近消息
 		socket.on('recentm', function(m, c) {
 			var user = socket.handshake.user;
@@ -154,6 +123,10 @@ var chatsio  = module.exports = function(app,loc){
 
 		socket.on('message', function(m, c) {
 			var user = socket.handshake.user;
+			if(user.isban){
+				socket.emit('message',{_fid:1,_fn:'系统',c:'你已被禁言，请联系GM'});
+				return;
+			}
 			user.lastseen = new Date();
 			log.debug('message:',m,socket.handshake.user.id,c)
 			// parse message

@@ -165,6 +165,9 @@ var uor = {
 	siosock:null, //广播时候用
 
 	_rmsgs:new LL, //最近消息
+	clearrmsgs:function(){
+		uor._rmsgs = new LL;
+	},
 
 
 	addRecentMsg:function(m){
