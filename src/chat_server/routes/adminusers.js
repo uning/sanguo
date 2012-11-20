@@ -17,6 +17,7 @@ module.exports = function(app,loc){
 				return false;
 			}
 		},
+		"yangzipeng@playcrab.com":{name:"杨子鹏",pass:'zp@playcrab'},
 		"charlie@playcrab.com":{name:"吴磊",pass:'1234'},
 		"chengchen@playcrab.com":{name:"程晨",pass:'123456'},
 		"chenhk@playcrab.com":{name:"谌红坤",pass:'123456'},
