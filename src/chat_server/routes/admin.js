@@ -13,6 +13,24 @@ module.exports = function(app,loc){
 	var uor = require('../useronline.registry.js');//用户列表 
 
 	// login form route
+	app.get(loc + '/admin/onlinecnt',auth.loadUser,function(req, res) {
+		var now = new Date().getTime()
+		var gap = req.query.gap || 300;
+        gap = (+gap)*1000;
+        
+        var totalsocket = 0,total = 0;
+		for(id in uor._currentUsers){
+			u = uor._currentUsers[id]
+			//if(u.lastseen.getTime() + gap > now){
+            if(u.socket ){
+              totalsocket += 1;
+			}
+            total +=1;
+
+		}
+        res.send("user entry: " + total + ", socket cnt: " + totalsocket);
+	});
+	// login form route
 	app.get(loc + '/admin/useronline',auth.loadUser,function(req, res) {
 		log.debug('params:',req.params); 
 		log.debug('qurery:',req.query); 
