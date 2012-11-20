@@ -38,13 +38,17 @@ module.exports = function(app,loc){
 		var uid = req.query && req.query.banuid 	
 		if(!uid)
 			uid = req.body && req.body.banuid;
-		var uo = uor.getUser(uid);
-		if(uo){
-			uo.isban = uo.isban ? 0: 1;
-			msg = uid + " user.isban is " + uo.isban;
-			req.flash('error',msg);
-		}else
-			req.flash('error',"not find uid: " + uid);
+		if(uid){
+			var uo = uor.getUser(uid);
+			if(uo){
+				uo.isban = uo.isban ? 0: 1;
+				msg = uid + " user.isban is " + uo.isban;
+				req.flash('error',msg);
+			}else
+				req.flash('error',"not find uid: " + uid);
+		}else{
+			uid = ''
+		}
 		res.render('admin/banusers', {
 			user: req.currentUser
 			,banuid:uid

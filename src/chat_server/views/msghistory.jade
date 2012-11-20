@@ -1,10 +1,11 @@
 
-extendslayout
+extends layout
 block body
 
  h3 在线用户列表
 
  a(href='?from=0') 第一页
+ | 
  a(href='?from=#{to}') 下一页
 
  - if (smongo)

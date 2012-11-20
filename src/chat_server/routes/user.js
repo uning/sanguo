@@ -12,11 +12,11 @@ module.exports = function(app,loc){
 	var auth = app.set('myauth');
 	var log = app.set('mylog');
 	var LoginUser = app.set('model_LoginUser');
-	var Admins = app.set('model_Admins');
+	var Admins = app.ADMINS;
 
-	app.get(loc + '/axx',function(req, res) {
-		res.send('get axx');
-	});
+	app.get('/test',function(req,res){
+		res.send(app.Admins);
+	})
 	// login form route
 	app.get(loc + '/',function(req, res) {
 		auth.sessionAuth(req,null,function(){
@@ -35,6 +35,21 @@ module.exports = function(app,loc){
 
 	// login route
 	app.post(loc +'/', function(req, res) {
+		var post = req.body
+		if(!post || !post.user ){
+			req.flash('error', 'Login failed 没有输入用户名或密码 ');
+			res.redirect(loc + '/');
+			return;
+		}
+		var user = Admins[post.user.email];
+		if(user && user.pass == post.user.password){
+			res.redirect(loc + '/');
+			req.session.currentUser = user;
+			var cid =  ID.genCid(user.email,'s1');
+			res.cookie('cid',  cid , { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+			return;
+		}
+
 		LoginUser.findOne({ pid: req.body.user.email }, function(err, user) {
 			if (user ) {
 				if(! user.authPass(req.body.user.password)){

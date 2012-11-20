@@ -1,7 +1,7 @@
 extends ../layout
 block body
- form
-   label(for='banuid') 封禁Uid:
-   input#banuid.required(name='banuid',size=5,value='#{banuid}' ) 
+ form(method='post')
+   封禁Uid:
+   input#banuid.required(name='banuid',size=5,value='#{banuid}') 
    div#submit-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only 提交
 
