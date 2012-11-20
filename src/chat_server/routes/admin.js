@@ -41,7 +41,7 @@ module.exports = function(app,loc){
 		var uo = uor.getUser(uid);
 		if(uo){
 			uo.isban = uo.isban ? 0: 1;
-			msg = uid + "user.isban is " + uo.isban;
+			msg = uid + " user.isban is " + uo.isban;
 			req.flash('error',msg);
 		}else
 			req.flash('error',"not find uid: " + uid);
