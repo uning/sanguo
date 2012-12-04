@@ -12,7 +12,7 @@ module.exports = function(app,loc){
 	var Apiloader = require(app.CONFIG.WORKROOT + '/src/appconf/apiloader.js');
 
 	//
-	var apiloader = new Apiloader(__dirname +'/api');
+	var apiloader = new Apiloader(__dirname +'/api',app.CONFIG.get('fs_nowatch',false));
 
 	var es = {
 		restrict:'restrict'

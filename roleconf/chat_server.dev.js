@@ -5,7 +5,7 @@ var r = module.exports = {
 	,userMongo: 'mongodb://127.0.0.1:35050/jsanguo'
 	,msgMongo:'mongodb://127.0.0.1:35050/chatmsg'
 	,chatRedis: 'redis://localhost:53002'
-	,sec:'s3'
+	,sec:'s1'
 	
 	,clearTimeOutUser:{
 		desc: '清除长时间没有连接的用户,周期'
@@ -17,5 +17,6 @@ var r = module.exports = {
 	,isDev: true
 	,log2console: true
 	,log_level:'debug'
+	,fs_nowatch:false
 	,mefile: __filename // override by loader save use filename
 }

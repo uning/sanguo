@@ -1,4 +1,5 @@
 
+
 /**
  * route 添加
  *
@@ -7,6 +8,7 @@
  */
 module.exports = function(app,loc){
 	loc = loc || '';
+
 
 	var auth = app.set('myauth');
 	var log  = app.set('mylog');

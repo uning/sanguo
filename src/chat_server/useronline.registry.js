@@ -339,8 +339,9 @@ var uor = {
 				var toids = msg.to,touser
 			if('all' === toids){
 				msg.t = 1;
-				socket.broadcast.emit('message',msg)
 			    uor.addRecentMsg(msg);
+				socket.broadcast.emit('message',msg)
+				log.debug('to all:',msg)
 			}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
 				touser = uor.getUser(toids);
 				touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 

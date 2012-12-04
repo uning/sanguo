@@ -33,8 +33,9 @@ require('../appconf/auth')(app);
 
 // require routes
 var RL = require('../appconf/routeloader.js')
-var rloader =  new RL(app,'',__dirname + '/routes')
+var rloader =  new RL(app,'',__dirname + '/routes',log,s.get('fs_nowatch',false))
 rloader.loadAll();
+app.rloader = rloader;
 
 
 //聊天逻辑
