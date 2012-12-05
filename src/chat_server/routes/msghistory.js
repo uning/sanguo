@@ -18,11 +18,8 @@ module.exports = function(app,loc){
 	var s = app.CONFIG;
 	var comm = require(s.WORKROOT + '/src/common.js')
 	var sec = s.get('sec');
-	if(s.get('msgMongo',null) == null ){
-		smongo = null;
-	}else{
-		smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),sec + '_msgs'));
-	}
+	var uor = require('../useronline.registry.js');//用户列表 
+	var smongo = uor.getSmongo();
 
 	// login form route
 	app.get(loc + '/msghistory',auth.loadUser,function(req, res) {

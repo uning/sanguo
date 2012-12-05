@@ -326,8 +326,8 @@ var uor = {
 			return
 		}
 		if(!msg._backend){
+			msg._sec = sec;
 			if(uor.APP.GUOLV(msg.c)){
-				msg._sec = sec;
 				msg._filt = 1;
 				smongo && smongo.collection.save(msg);
 				log.warn('uor  filt  msg:' ,msg);
@@ -367,6 +367,13 @@ var uor = {
 			}
 		}
 	}
+
+	,getSmongo:function(){
+		if(s.get('msgMongo',null) == null ){
+			return null;
+		}
+		return require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo')),'chat_msgs');
+	}
 	/**
 	 * 
 	 *  启动清理，连接redis
@@ -387,11 +394,7 @@ var uor = {
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
 
 
-		if(s.get('msgMongo',null) == null ){
-			smongo = null;
-		}else{
-			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo')),'chat_msgs');
-		}
+		smongo = uor.getSmongo();//require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo')),'chat_msgs');
 
 
 		//订阅游戏服务器的 sec + ':realtime' 的消息
