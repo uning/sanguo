@@ -168,6 +168,7 @@ var uor = {
 	clearrmsgs:function(){
 		uor._rmsgs = new LL;
 	},
+	
 
 
 	addRecentMsg:function(m){
@@ -324,7 +325,17 @@ var uor = {
 			log.warn('uor not have socket discard msg:' ,msg);
 			return
 		}
-		smongo && smongo.collection.save(msg);
+		if(!msg._backend){
+			if(uor.APP.GUOLV(msg.c)){
+				msg._sec = sec;
+				msg._filt = 1;
+				smongo && smongo.collection.save(msg);
+				log.warn('uor  filt  msg:' ,msg);
+				return;
+			}
+			
+			smongo && smongo.collection.save(msg);
+		}
 		//socket.emit('message',msg)
 		switch (msg.t) {
 			case 1:
@@ -371,15 +382,15 @@ var uor = {
 		sec = s.get('sec');
 		llnum = s.get('llnum',10);
 		app.set('model_Uor',uor)
+		uor.APP = app;
 		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
 
 
 		if(s.get('msgMongo',null) == null ){
 			smongo = null;
-
 		}else{
-			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),sec + '_msgs'));
+			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),'chat_msgs'));
 		}
 
 
@@ -396,6 +407,7 @@ var uor = {
 			try{
 				jso = json.parse(msg);
 				if(jso){
+					jso._backend = 1;
 					uor.processMessage(jso);
 				}
 			}catch(e){

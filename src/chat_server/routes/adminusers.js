@@ -1,6 +1,19 @@
 
 
 module.exports = function(app,loc){
+	//
+	app.GUOLV =  function(c){
+		var regs = [
+			/[0-9]{6,}/,
+			/(http[s]?:\/\/)|(taobao)|(qq)|淘宝/i,
+		];
+		var ret = false,i = 0;
+		for(; i < regs.length; i++){
+			if(regs[i].test(c))
+				return true;
+		}
+		return false;
+	}
 
 	app.ADMINS={
 		isValid:function(email){

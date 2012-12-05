@@ -11,7 +11,7 @@
 	var fs   = require('fs');
 	var s = require(__dirname  + '/configservice.js')
 	,comm = require(s.WORKROOT + '/src/common.js')
-	,log = comm.getLogger('main')
+	,log = comm.getLogger('conf')
 
 	var PHPConfLoader = function(dir) {
 		this._dir = dir
