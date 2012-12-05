@@ -4,7 +4,7 @@ app = {};
 app.GUOLV =  function(c){
 	var regs = [
 		/[0-9]{6,}/,
-		/(http[s]?:\/\/)|(taobao)|(qq)|淘宝/i,
+		/(http[s]?:\/\/)|(taobao)|(qq)|淘宝|帐号|扣扣/i,
 	];
 	var ret = false,i = 0;
 	for(; i < regs.length; i++){
