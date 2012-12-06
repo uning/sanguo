@@ -41,6 +41,7 @@ module.exports = function(app,loc){
 			res.redirect(loc + '/');
 			return;
 		}
+		Admins = app.ADMINS;
 		var user = Admins[post.user.email];
 		if(user && user.pass == post.user.password){
 			res.redirect(loc + '/');
