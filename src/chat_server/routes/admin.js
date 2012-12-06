@@ -60,12 +60,13 @@ module.exports = function(app,loc){
 			uid = req.body && req.body.banuid;
 		if(uid){
 			var uo = uor.getUser(uid);
+			var ban = 1;
 			if(uo){
-				uo.isban = uo.isban ? 0: 1;
-				msg = uid + " user.isban is " + uo.isban;
-				req.flash('error',msg);
-			}else
-				req.flash('error',"not find uid: " + uid);
+				ban = uo.isban = uo.isban ? 0: 1;
+			}
+			uor.ban(ban,uid);
+			msg = uid + " user.isban is " + uo.isban;
+			req.flash('error',msg);
 		}else{
 			uid = ''
 		}

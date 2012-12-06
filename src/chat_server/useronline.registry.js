@@ -56,6 +56,14 @@ ChatUser.prototype.init = function(){
 	else{
 		id = parseInt(id) ; //toint 
 	}
+	var mid = 'ban:'+ this.id
+	rc.get(mid,function(err,res){
+		if(!err){
+			if(+res == 1)
+				that.isban = 1;
+		}
+		log.debug('ChatUser.init ' + mid,res,'isban='+ that.isban,err);
+	});
 
 	/*获取名字及好友列表
 	LoginUser.findById(id,function(err,user){
@@ -96,6 +104,7 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 		}
 	})
 }
+
 
 /**
 * 向redis 服务器注册
@@ -223,6 +232,11 @@ var uor = {
 
 	},
 
+	ban : function(r,uid){
+		var mid = 'ban:'+ uid
+		rc.set(mid,r,function(){
+		});
+	},
 	/**
 	 * 离线消息存储
 */
