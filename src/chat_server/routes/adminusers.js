@@ -1,6 +1,19 @@
 
 
 module.exports = function(app,loc){
+	//
+	app.GUOLV =  function(c){
+		var regs = [
+			/[0-9]{6,}/,
+			/(http[s]?:\/\/)|(taobao)|(qq)|淘宝/i,
+		];
+		var ret = false,i = 0;
+		for(; i < regs.length; i++){
+			if(regs[i].test(c))
+				return true;
+		}
+		return false;
+	}
 
 	app.ADMINS={
 		isValid:function(email){
@@ -29,7 +42,6 @@ module.exports = function(app,loc){
 		"jettie@playcrab.com":{name:"于杰",pass:'123456'},
 		"kevin@playcrab.com":{name:"叶凯",pass:'123456'},
 		"kf.wuxia@playcrab.com":{name:"武侠客服",pass:'123456'},
-		"leiolio@playcrab.com":{name:"王晓东",pass:'123456'},
 		"linying@playcrab.com":{name:"林影",pass:'123456'},
 		"liuyang@playcrab.com":{name:"刘洋",pass:'123456'},
 		"liwh@playcrab.com":{name:"李旺洪",pass:'123456'},
@@ -45,10 +57,7 @@ module.exports = function(app,loc){
 		"wangkun@playcrab.com":{name:"王定坤",pass:'123456'},
 		"weiy@playcrab.com":{name:"杨薇",pass:'123456'},
 		"wely@playcrab.com":{name:"尹力炜",pass:'123456'},
-		"yangcl@playcrab.com":{name:"杨成龙",pass:'123456'},
 		"yewei@playcrab.com":{name:"叶伟",pass:'123456'},
-		"design@playcrab.com":{name:"策划",pass:'123456'},
-		"dev@playcrab.com":{name:"攻城师",pass:'123456'},
 		"livemall@playcrab.com":{name:"购物天堂",pass:'123456'},
 		"livemall_report@playcrab.com":{name:"购物天堂 数据",pass:'123456'},
 		"kf@playcrab.com":{name:"客服",pass:'123456'},

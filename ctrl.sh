@@ -21,10 +21,30 @@ myabdir=$(cd $mydir && pwd)
 usage(){
 cat <<HELP
  ctrl prog of sanguo
- usage: $0 <rolef> {start|stop|restart|log} 
+ usage: $0 <rolef|allrestart> {start|stop|restart|log} 
+     allrestart --重启所有运行的node 
+ 
 HELP
   exit 0
 }
+
+#更新代码，重启node
+restart_all(){
+	git pull   
+	ps aux | grep node 
+	for pidfile in $(ls $myabdir/pids/)
+	do
+		rolef=$myabdir/roleconf/$(basename $pidfile .pid).js
+		echo restart $rolef
+		$myabdir/ctrl.sh $rolef restart
+	done
+	ps aux | grep node 
+}
+if [ "$1" == 'allrestart' ] ; then
+	    restart_all
+		exit ; 
+fi
+
 
 rolef=$1
 if [ ! -f  "$rolef" ] ; then
@@ -64,9 +84,11 @@ stop(){
 			kill  $pid
 			sleep 0.1
 			tail $logf
+			rm -f $pidf
 		fi
 
 }
+
 
 case "$2" in
 	start)

@@ -18,21 +18,23 @@ module.exports = function(app,loc){
 	var s = app.CONFIG;
 	var comm = require(s.WORKROOT + '/src/common.js')
 	var sec = s.get('sec');
-	if(s.get('msgMongo',null) == null ){
-		smongo = null;
-	}else{
-		smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),sec + '_msgs'));
-	}
+	var uor = require('../useronline.registry.js');//用户列表 
+	var smongo = uor.getSmongo();
 
 	// login form route
 	app.get(loc + '/msghistory',auth.loadUser,function(req, res) {
 		log.debug('params:',req.params); 
 		log.debug('qurery:',req.query); 
 		var start = req.query.from || 0;
+		var filt = req.query.filt || 0;
 		var limit = req.query.limit || 20;
 		var to =  (+start) + (+limit);
+		var cond = {}
+		if(filt)
+			cond._filt = 1;
+		log.debug('msghistory cond',cond);
 		if(smongo){
-			smongo.find().sort({'$natural':-1}).skip(start).limit(limit).exec(
+			smongo.find(cond).sort({'$natural':-1}).skip(start).limit(limit).exec(
 				function(err,msgs){
 				//console.log(msgs);
 				if(err){
@@ -40,6 +42,7 @@ module.exports = function(app,loc){
 						smongo: null
 						,user: req.currentUser
 						,to:to
+						,filt:filt
 					});
 				}else{
 					var nmsgs = []
@@ -64,6 +67,7 @@ module.exports = function(app,loc){
 						,user: req.currentUser
 						,users:nmsgs
 						,to:to
+						,filt:filt
 					});
 				}
 			})
@@ -72,6 +76,7 @@ module.exports = function(app,loc){
 				smongo: null
 				,user: req.currentUser
 				,to: to
+				,filt:filt
 			});
 		}
 	});

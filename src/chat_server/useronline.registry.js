@@ -56,6 +56,14 @@ ChatUser.prototype.init = function(){
 	else{
 		id = parseInt(id) ; //toint 
 	}
+	var mid = 'ban:'+ this.id
+	rc.get(mid,function(err,res){
+		if(!err){
+			if(+res == 1)
+				that.isban = 1;
+		}
+		log.debug('ChatUser.init ' + mid,res,'isban='+ that.isban,err);
+	});
 
 	/*获取名字及好友列表
 	LoginUser.findById(id,function(err,user){
@@ -96,6 +104,7 @@ ChatUser.prototype.getRecentMsgs = function(callback){
 		}
 	})
 }
+
 
 /**
 * 向redis 服务器注册
@@ -168,6 +177,7 @@ var uor = {
 	clearrmsgs:function(){
 		uor._rmsgs = new LL;
 	},
+	
 
 
 	addRecentMsg:function(m){
@@ -222,6 +232,11 @@ var uor = {
 
 	},
 
+	ban : function(r,uid){
+		var mid = 'ban:'+ uid
+		rc.set(mid,r,function(){
+		});
+	},
 	/**
 	 * 离线消息存储
 */
@@ -324,7 +339,17 @@ var uor = {
 			log.warn('uor not have socket discard msg:' ,msg);
 			return
 		}
-		smongo && smongo.collection.save(msg);
+		if(!msg._backend){
+			msg._sec = sec;
+			if(uor.APP.GUOLV(msg.c)){
+				msg._filt = 1;
+				smongo && smongo.collection.save(msg);
+				log.warn('uor  filt  msg:' ,msg);
+				return;
+			}
+			
+			smongo && smongo.collection.save(msg);
+		}
 		//socket.emit('message',msg)
 		switch (msg.t) {
 			case 1:
@@ -339,8 +364,9 @@ var uor = {
 				var toids = msg.to,touser
 			if('all' === toids){
 				msg.t = 1;
-				socket.broadcast.emit('message',msg)
 			    uor.addRecentMsg(msg);
+				socket.broadcast.emit('message',msg)
+				log.debug('to all:',msg)
 			}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
 				touser = uor.getUser(toids);
 				touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 
@@ -354,6 +380,13 @@ var uor = {
 				log.warn('no `to` ignore',msg._fid);
 			}
 		}
+	}
+
+	,getSmongo:function(){
+		if(s.get('msgMongo',null) == null ){
+			return null;
+		}
+		return require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo')),'chat_msgs');
 	}
 	/**
 	 * 
@@ -370,16 +403,12 @@ var uor = {
 		sec = s.get('sec');
 		llnum = s.get('llnum',10);
 		app.set('model_Uor',uor)
+		uor.APP = app;
 		setInterval(this.clearTimeOutUser,clearTimeOutUser * 60 * 1000);//清除timeout用户信息
 		log.debug('clearTimeOutUser gap :', clearTimeOutUser ,'(sec) env',process.env['NODE_ENV'])
 
 
-		if(s.get('msgMongo',null) == null ){
-			smongo = null;
-
-		}else{
-			smongo = require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo'),sec + '_msgs'));
-		}
+		smongo = uor.getSmongo();//require( s.WORKROOT  + '/src/model/chatmsg.js').get(comm.getMongoose(s.get('msgMongo')),'chat_msgs');
 
 
 		//订阅游戏服务器的 sec + ':realtime' 的消息
@@ -395,6 +424,7 @@ var uor = {
 			try{
 				jso = json.parse(msg);
 				if(jso){
+					jso._backend = 1;
 					uor.processMessage(jso);
 				}
 			}catch(e){
