@@ -1,4 +1,4 @@
-  /**
+/**
  * LoginUseModel
  */
 require('./common')
