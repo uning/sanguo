@@ -15,7 +15,7 @@ module.exports = function(app,loc){
 	var uor = require('../useronline.registry.js');//用户列表 
 
 	// login form route
-	app.get(loc + '/admin/onlinecnt',auth.loadUser,function(req, res) {
+	app.get(loc + '/admin/onlinecnt',function(req, res) {
 		var now = new Date().getTime()
 		var gap = req.query.gap || 300;
         gap = (+gap)*1000;
@@ -55,6 +55,29 @@ module.exports = function(app,loc){
 
 	//login form route
 	app.all(loc + '/admin/banusers',auth.loadUser,function(req, res) {
+		var uid = req.query && req.query.banuid 	
+		if(!uid)
+			uid = req.body && req.body.banuid;
+		if(uid){
+			var uo = uor.getUser(uid);
+			var ban = 1;
+			if(uo){
+				ban = uo.isban = uo.isban ? 0: 1;
+			}
+			uor.ban(ban,uid);
+			msg = uid + " user.isban is " + uo.isban;
+			req.flash('error',msg);
+		}else{
+			uid = ''
+		}
+		res.render('admin/banusers', {
+			user: req.currentUser
+			,banuid:uid
+		});
+	});
+
+	//login form route
+	app.all(loc + '/admin/filter',auth.loadUser,function(req, res) {
 		var uid = req.query && req.query.banuid 	
 		if(!uid)
 			uid = req.body && req.body.banuid;
