@@ -5,7 +5,7 @@ module.exports = function(app,loc){
 	app.GUOLV =  function(c){
 		var regs = [
 			/[0-9]{6,}/,
-			/(http[s]?:\/\/)|(taobao)|(qq)|淘宝/i,
+			/(http[s]?:\/\/)|(taobao)|(qq)|淘宝|元宝|yb/i,
 		];
 		var ret = false,i = 0;
 		for(; i < regs.length; i++){
