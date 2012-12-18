@@ -3,6 +3,11 @@
 module.exports = function(app,loc){
 	//
 	app.GUOLV =  function(c){
+		app.filter_reg = /[0-9]{6,}|(http[s]?:\/\/)|q号|扣:|yb|元宝|(taobao)|(qq)|淘宝|帐号|扣扣/i
+		if(app.filter_reg.test(c))
+		return true;
+
+		return false;
 		var regs = [
 			/[0-9]{6,}/,
 			/(http[s]?:\/\/)|(taobao)|(qq)|淘宝|元宝|yb/i,
