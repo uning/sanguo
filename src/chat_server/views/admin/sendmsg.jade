@@ -1,0 +1,9 @@
+
+extends ../layout
+block body
+ form(method='post')
+   名称:
+   input#banuid.required(name='name',size=5,value='#{name}') 
+   消息:
+   input#banuid.required(name='msg',size=30,value='#{msg}') 
+   div#submit-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only 提交

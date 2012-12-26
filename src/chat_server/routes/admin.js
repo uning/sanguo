@@ -53,7 +53,6 @@ module.exports = function(app,loc){
 	})
 
 
-	//login form route
 	app.all(loc + '/admin/banusers',auth.loadUser,function(req, res) {
 		var uid = req.query && req.query.banuid 	
 		if(!uid)
@@ -75,6 +74,32 @@ module.exports = function(app,loc){
 			,banuid:uid
 		});
 	});
+	app.all(loc + '/admin/sendmsg',auth.loadUser,function(req, res) {
+		var name = req.query && req.query.name 	
+		if(!name)
+			name = req.body && req.body.name;
+		if(!name){
+			name = 'GM-芷若'
+		}
+		var msg = req.query && req.query.msg 	
+		if(!msg)
+			msg = req.body && req.body.msg;
+		if(msg){
+			var mo = {}
+			mo._fid = 1;
+			mo._fn = name;
+			mo.c  = msg;
+			mo.t = 1;
+			uor.siosock && uor.siosock.broadcast.emit('message',mo);
+
+		}else
+			msg = '';
+		res.render('admin/sendmsg', {
+			user: req.currentUser
+			,name:name
+			,msg:msg
+		});
+	});
 
 	//login form route
 	app.all(loc + '/admin/filter',auth.loadUser,function(req, res) {
@@ -93,7 +118,7 @@ module.exports = function(app,loc){
 		}else{
 			uid = ''
 		}
-		res.render('admin/banusers', {
+		res.render('admin/filter', {
 			user: req.currentUser
 			,banuid:uid
 		});
@@ -104,8 +129,13 @@ module.exports = function(app,loc){
 
 	//login form route
 	app.all(loc + '/admin/clearrmsgs',auth.loadUser,function(req, res) {
-		uor.clearrmsgs();
-		res.send('清除记录OK')
+		var confirm = req.query && req.query.confirm
+		if(confirm)
+			uor.clearrmsgs();
+		//res.send('清除记录OK')
+		res.render('recentmsg', {
+			msgs: uor._rmsgs.toArray()
+		});
 	});
 
 

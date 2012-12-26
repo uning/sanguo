@@ -1,0 +1,22 @@
+
+extends layout
+block body
+
+ h3 最近聊天记录
+
+ a(href='?confirm=1') 确认清除
+ - if (1)
+  table(border=1)
+   thead  
+       th 名字 
+       th 用户id
+       th 内容
+       th 消息类型
+       th 发送时间 
+   each m in msgs
+     tr
+       td #{m._fn}
+       td #{m._fid}
+       td #{m.c} 
+       td #{m.t}
+       td #{m._t}
