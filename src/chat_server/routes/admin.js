@@ -91,6 +91,7 @@ module.exports = function(app,loc){
 			mo.c  = msg;
 			mo.t = 1;
 			uor.siosock && uor.siosock.broadcast.emit('message',mo);
+			uor.addRecentMsg(mo);
 
 		}else
 			msg = '';
