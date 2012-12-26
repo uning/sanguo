@@ -2,8 +2,8 @@ var r = module.exports = {
 	 role: 'chat_server' // override by loader save from filename 
 	,confserver: 'mongodb://122.11.61.28:35050/nodeconfig'
 	,userMongo: 'mongodb://122.11.61.28:35050/chatserver'
-	,sessionRedis: 'redis://10.200.77.180:53000'
-	,chatRedis: 'redis://10.200.77.180:53005'
+	,sessionRedis: 'redis://10.135.14.74:53000'
+	,chatRedis: 'redis://10.135.14.74:53005'
 	,msgMongo:'mongodb://10.200.31.72:35080/chatmsg'
 	,sec:'s13'
 	

@@ -3,8 +3,8 @@ var r = module.exports = {
 	,confserver: 'mongodb://122.11.61.28:35050/nodeconfig'
 	,userMongo: 'mongodb://122.11.61.28:35050/chatserver'
 
-	,sessionRedis: 'redis://10.200.77.180:53000'
-	,chatRedis: 'redis://10.200.77.180:53005'
+	,sessionRedis: 'redis://10.135.14.74:53000'
+	,chatRedis: 'redis://10.135.14.74:53005'
 	,msgMongo:'mongodb://10.200.77.181:35070/chatmsg'
 	,sec:'s6'
 	
