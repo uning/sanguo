@@ -64,7 +64,7 @@ module.exports = function(app,loc){
 				ban = uo.isban = uo.isban ? 0: 1;
 			}
 			uor.ban(ban,uid);
-			msg = uid + " user.isban is " + uo.isban;
+			msg = uid + " user.isban is " + ban;
 			req.flash('error',msg);
 		}else{
 			uid = ''
