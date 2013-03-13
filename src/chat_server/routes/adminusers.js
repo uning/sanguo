@@ -3,7 +3,7 @@
 module.exports = function(app,loc){
 	//
 	app.GUOLV =  function(c){
-		app.filter_reg = /[0-9]{6,}|(http[s]?:\/\/)|q号|扣:|yb|元宝|(taobao)|(qq)|淘宝|帐号|扣扣|１|２|３|４|５|６|７|８|９|０|元|元寶|萬|Q|壹|贰|叁|肆|伍|陆|柒|捌|玖|拾/i
+		app.filter_reg = /[0-9]{6,}|(http[s]?:\/\/)|q号|扣:|yb|(taobao)|(qq)|淘宝|帐号|扣扣|１|２|３|４|５|６|７|８|９|０|元|萬|Q|壹|贰|叁|肆|伍|陆|柒|捌|玖|拾|块|錢|聯繫|/i
 		if(app.filter_reg.test(c))
 		return true;
 
