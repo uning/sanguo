@@ -3,7 +3,7 @@
 app = {};
 app.GUOLV =  function(c){
 
-	app.filter_reg = /[0-9]{6,}|(http[s]?:\/\/)|q号|扣:|yb|元宝|(taobao)|(qq)|淘宝|帐号|扣扣/i
+	app.filter_reg = /[0-9]{6,}|(http[s]?:\/\/)|q号|扣:|yb|taobao|qq|淘宝|帐号|扣扣|１|２|３|４|５|６|７|８|９|０|元|充值|萬|壹|贰|叁|肆|伍|陆|柒|捌|玖|拾|块|錢|聯繫/i
 	if(app.filter_reg.test(c))
 	return true;
 
@@ -36,7 +36,8 @@ var  contents = {
 	'淘宝充值':true,
 	'元宝':true,
 	'123456':true,
-	'123':false
+	'123':false,
+	'充值':true
 },r,i,tr
 for(c in contents){
 	r = contents[c];
@@ -46,4 +47,4 @@ for(c in contents){
 
 	
 }
-		console.log('KO',app.GUOLV({add:1}));
+//console.log('KO',app.GUOLV({add:1}));

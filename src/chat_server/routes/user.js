@@ -45,7 +45,7 @@ module.exports = function(app,loc){
 		var user = Admins[post.user.email];
 		if(user && user.pass == post.user.password){
 			req.session && (req.session.currentUser = user)
-			var cid =  ID.genCid(user.email,'s1');
+			var cid =  ID.genCid(post.user.email,'s1');
 			res.cookie('cid',  cid , { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
 			res.redirect(loc + '/');
 			return;

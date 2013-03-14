@@ -216,7 +216,7 @@ var uor = {
 
 	/**
 	 * 清理断开的用户,默认半小时 
-*/
+     */
 	clearTimeOutUser:function(t){
 		log.info('do clearTimeOutUser ...');
 		var to = t || 3600000,now = new Date().getTime(),u
@@ -369,7 +369,7 @@ var uor = {
 				log.debug('to all:',msg)
 			}else if( typeof '1' === typeof toids || typeof 1 === typeof toids  ){
 				touser = uor.getUser(toids);
-				touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 
+				//touser && touser.tome(msg) || uor.offlineMsg(toids,omsg) 
 			}else if(typeof toids === typeof []){
 				var unum = toids.length
 				for(var i = 0 ;i < unum ; i ++){

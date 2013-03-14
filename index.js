@@ -76,6 +76,7 @@ process.on('uncaughtException',function(ex){
 	process.exit(0);
 })
 */
+
 process.on('SIGHUP', function () {
   log.error('Got SIGHUP signal.');
 });

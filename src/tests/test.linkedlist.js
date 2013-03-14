@@ -28,7 +28,7 @@ l = new LL;
 		l.size().should.eql(1);
 		l.toArray().should.eql([items[0]])
         
-false &&
+1 &&
 //*/
 describe('LinkedList', function() {
     it('rpush rpop', function() {
